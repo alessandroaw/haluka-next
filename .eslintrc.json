@@ -1,0 +1,25 @@
+{
+  "extends": [
+    "next/core-web-vitals",
+    "prettier"
+  ],
+  "rules": {
+    "linebreak-style": "off",
+    "no-underscore-dangle": "off",
+    "no-console": "off",
+    "object-curly-newline": [
+      "error",
+      {
+        "consistent": true
+      }
+    ],
+    "no-param-reassign": [
+      "error",
+      {
+        "props": false
+      }
+    ],
+    "eol-last": "off",
+    "camelcase": "off"
+  }
+}
