@@ -18,36 +18,12 @@ import { User } from "src/types/models";
 
 type LoginStage = "clientNameVerification" | "loginAsCashier" | "loginAsAdmin";
 
-const mockUsers: User[] = [
-  {
-    id: "751791f3-c9dc-47bd-95c3-7e83506efabf",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: null,
-    clientId: "16863166-bc5c-4727-ab3d-d6818795968f",
-    name: "devi",
-    password: "password",
-    role: 1,
-  },
-  {
-    id: "5c8d9d99-7650-4a3a-9c70-769c8a2a73ee",
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    deletedAt: null,
-    clientId: "16863166-bc5c-4727-ab3d-d6818795968f",
-    name: "warput",
-    password: "password",
-    role: 2,
-  },
-];
-
 export const LoginForm: React.FC = () => {
   const [stage, setStage] = React.useState<LoginStage>(
-    // "clientNameVerification"
-    "loginAsCashier"
+    "clientNameVerification"
   );
   const [clientName, setClientName] = React.useState("");
-  const [users, setUsers] = React.useState<User[]>(mockUsers);
+  const [users, setUsers] = React.useState<User[]>([]);
 
   const loginFormMux = () => {
     switch (stage) {
@@ -231,17 +207,23 @@ const LoginFormInput: React.FC<LoginFormInputProps> = ({
           user:
             stage === "loginAsAdmin"
               ? users.filter((u) => u.role === 1)[0]
-              : users[0],
+              : undefined,
         }}
+        validationSchema={Yup.object({
+          password: Yup.string().required("Password harus diisi"),
+          user: Yup.object().required("Wartel harus dipilih"),
+        })}
         onSubmit={async (values, { setSubmitting, setErrors }) => {
           setSubmitting(true);
           try {
+            if (!values.user) return;
             const user = await login(values.user.id, values.password);
           } catch (error) {
             setErrors({
-              password: "Terjadi kesalahan saat menghubungi server",
+              password: "Password yang anda masukan salah",
             });
           }
+          setSubmitting(false);
         }}
       >
         {({
@@ -258,15 +240,23 @@ const LoginFormInput: React.FC<LoginFormInputProps> = ({
               {stage === "loginAsCashier" && (
                 <Autocomplete
                   disablePortal
-                  disableClearable
+                  // disableClearable
                   onChange={(_, newValue) =>
                     setFieldValue("user", newValue ?? "")
                   }
                   options={users.filter((u) => u.role > 1)}
-                  value={values.user || null}
+                  value={values.user}
                   getOptionLabel={(option) => option.name}
+                  isOptionEqualToValue={(option, value) =>
+                    option.id === value.id
+                  }
                   renderInput={(params) => (
-                    <TextField {...params} label="Wartel" />
+                    <TextField
+                      {...params}
+                      error={touched.user && Boolean(errors.user)}
+                      helperText={touched.user && errors.user}
+                      label="Wartel"
+                    />
                   )}
                 />
               )}
