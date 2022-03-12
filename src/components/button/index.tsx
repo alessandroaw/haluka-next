@@ -14,7 +14,7 @@ export const Button: React.FC<Props> = (props) => (
 );
 
 export const RoundedButton = styled(Button)({
-  borderRadius: kBorderRadius,
+  borderRadius: "100px",
   textTransform: "initial",
 });
 
