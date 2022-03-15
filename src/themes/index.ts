@@ -20,18 +20,8 @@ declare module "@mui/material/styles" {
   interface PaletteOptions {
     neutral: PaletteOptions["primary"];
   }
+}
 
-  // allow configuration using `createTheme`
-  interface TypographyVariantsOptions {
-    tooltip?: React.CSSProperties;
-  }
-}
-// Update the Typography's variant prop options
-declare module "@mui/material/Typography" {
-  interface TypographyPropsVariantOverrides {
-    tooltip: true;
-  }
-}
 const theme = createTheme({
   typography,
   breakpoints: {

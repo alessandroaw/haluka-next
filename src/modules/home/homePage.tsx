@@ -1,7 +1,7 @@
+import { HalukaLogo } from "src/components/logo";
 import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { NextPage } from "next";
 import Image from "next/image";
-import logoImg from "public/images/png/logo.png";
 import heroImg from "public/images/svg/login-hero.svg";
 import { kGridSpacingDefault } from "src/utils/constant";
 import { LoginForm } from "./loginForm";
@@ -25,9 +25,7 @@ export const HomePage: NextPage = () => (
       }}
     >
       <Stack height="100%" justifyContent="space-between">
-        <Box>
-          <Image src={logoImg} width={90} height={40.5} layout="intrinsic" />
-        </Box>
+        <HalukaLogo />
         <Grid container spacing={kGridSpacingDefault} alignItems="center">
           <LoginHero />
           <LoginForm />
