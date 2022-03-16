@@ -7,6 +7,7 @@ import {
   Typography,
 } from "@mui/material";
 import React from "react";
+import { useUser } from "src/swr-cache/useUser";
 import { getInitials } from "src/utils/helper";
 import { RoundedButton } from ".";
 
@@ -17,7 +18,7 @@ export interface AvatarButtonProps {
 export const AvatarButton: React.FC<AvatarButtonProps> = ({
   anchorHorizontal,
 }) => {
-  // const { user } = useUser();
+  const { user } = useUser();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const isMenuOpen = Boolean(anchorEl);
@@ -42,12 +43,12 @@ export const AvatarButton: React.FC<AvatarButtonProps> = ({
         onClick={handleAccountMenuClick}
         startIcon={
           <Avatar sx={{ backgroundColor: "primary.main" }}>
-            {getInitials("Nama User")}
+            {user && getInitials(user.name)}
           </Avatar>
         }
         endIcon={<i className="bx bx-chevron-down" />}
       >
-        <Typography variant="label-lg">Nama User</Typography>
+        <Typography variant="label-lg">{user && user.name}</Typography>
       </RoundedButton>
       <Menu
         id="basic-menu"
@@ -82,9 +83,10 @@ export interface AccountMenuProps {
 }
 
 export const AccountMenu: React.FC<AccountMenuProps> = ({ handleClose }) => {
-  // const { user, mutate } = useUser();
+  const { user, mutate } = useUser();
   const handleLogout = async () => {
     try {
+      // TODO: Implement logout
       // await logout();
       // mutate();
     } catch (e) {
@@ -105,17 +107,14 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({ handleClose }) => {
                 backgroundColor: "primary.main",
               }}
             >
-              {getInitials("Nama User")}
+              {user && getInitials(user.name)}
             </Avatar>
           </ListItemIcon>
           <Stack>
             <Typography variant="overline" color="neutral.disabled">
-              Role
+              {user?.role === 1 ? "Admin" : "Kasir"}
             </Typography>
-            <Typography variant="label-lg">Nama User</Typography>
-            <Typography variant="caption" color="neutral.disabled">
-              Email User
-            </Typography>
+            <Typography variant="label-lg">{user && user.name}</Typography>
           </Stack>
         </Stack>
       </MenuItem>

@@ -15,6 +15,7 @@ import { RoundedButton } from "src/components/button";
 import { kGridSpacingDefault } from "src/utils/constant";
 import { fetchUsersByClientName, login } from "src/repositories/ auth";
 import { User } from "src/types/models";
+import { mutate } from "swr";
 
 type LoginStage = "clientNameVerification" | "loginAsCashier" | "loginAsAdmin";
 
@@ -218,6 +219,8 @@ const LoginFormInput: React.FC<LoginFormInputProps> = ({
           try {
             if (!values.user) return;
             const user = await login(values.user.id, values.password);
+            // Mutate User Cache
+            mutate("/user/profile", user);
           } catch (error) {
             setErrors({
               password: "Password yang anda masukan salah",

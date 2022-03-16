@@ -5,36 +5,52 @@ import Image from "next/image";
 import heroImg from "public/images/svg/login-hero.svg";
 import { kGridSpacingDefault } from "src/utils/constant";
 import { LoginForm } from "./loginForm";
+import { useUser } from "src/swr-cache/useUser";
+import React from "react";
+import { useRouter } from "next/router";
 
-export const HomePage: NextPage = () => (
-  <Box
-    sx={{
-      backgroundImage: `url(images/png/login-bg.png)`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      backgroundRepeat: "no-repeat",
-      width: "100%",
-      height: "100vh",
-    }}
-  >
-    <Container
-      maxWidth="lg"
+export const HomePage: NextPage = () => {
+  const { user, loggedOut } = useUser();
+  const router = useRouter();
+
+  React.useEffect(() => {
+    if (user && !loggedOut) {
+      user.role === 2
+        ? router.replace("/booth-monitoring")
+        : router.replace("/transaction-history");
+    }
+  }, [user, loggedOut]);
+
+  return (
+    <Box
       sx={{
-        height: "100%",
-        pt: 4,
+        backgroundImage: `url(images/png/login-bg.png)`,
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+        width: "100%",
+        height: "100vh",
       }}
     >
-      <Stack height="100%" justifyContent="space-between">
-        <HalukaLogo />
-        <Grid container spacing={kGridSpacingDefault} alignItems="center">
-          <LoginHero />
-          <LoginForm />
-        </Grid>
-        <Footer />
-      </Stack>
-    </Container>
-  </Box>
-);
+      <Container
+        maxWidth="lg"
+        sx={{
+          height: "100%",
+          pt: 4,
+        }}
+      >
+        <Stack height="100%" justifyContent="space-between">
+          <HalukaLogo />
+          <Grid container spacing={kGridSpacingDefault} alignItems="center">
+            <LoginHero />
+            <LoginForm />
+          </Grid>
+          <Footer />
+        </Stack>
+      </Container>
+    </Box>
+  );
+};
 
 export const Footer: React.FC = () => (
   <Stack direction="row" width="100%" mb={3.25} justifyContent="space-between">
