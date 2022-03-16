@@ -1,29 +1,10 @@
 import { createTheme, responsiveFontSizes, ThemeOptions } from "@mui/material";
-import { TypographyOptions } from "@mui/material/styles/createTypography";
+import { palette } from "./palette";
 import { typography } from "./typography";
-
-declare module "@mui/material/styles" {
-  interface TypographyVariants {
-    tooltip: React.CSSProperties;
-  }
-
-  interface PaletteColor {
-    active?: string;
-  }
-  interface SimplePaletteColorOptions {
-    active?: string;
-  }
-
-  interface Palette {
-    neutral: Palette["primary"];
-  }
-  interface PaletteOptions {
-    neutral: PaletteOptions["primary"];
-  }
-}
 
 const theme = createTheme({
   typography,
+  palette,
   breakpoints: {
     values: {
       xs: 0,

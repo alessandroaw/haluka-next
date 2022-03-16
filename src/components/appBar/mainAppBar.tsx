@@ -12,11 +12,15 @@ export const MainAppBar: React.FC = () => {
 
   const router = useRouter();
   const tabValue = Navigations[router.pathname.split("/")[1]];
-
   return (
-    <AppBar color="inherit" elevation={0} position="static">
-      <Container maxWidth="lg">
-        <Toolbar disableGutters sx={{ py: "11.75px" }}>
+    <AppBar
+      color="inherit"
+      elevation={0}
+      position="static"
+      // sx={{ borderBottom: "3px solid #FDFCFF " }}
+    >
+      <Container maxWidth="lg" sx={{ py: "11.75px" }}>
+        <Toolbar disableGutters>
           <HalukaLogo />
           <Tabs
             value={tabValue}
