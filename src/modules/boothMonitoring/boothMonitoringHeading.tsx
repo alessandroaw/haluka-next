@@ -1,4 +1,6 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Skeleton, Stack, Typography } from "@mui/material";
+import { GenericErrorAlert } from "src/components/alert";
+import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
 
 export const BoothMonitoringHeading = () => (
@@ -10,16 +12,45 @@ export const BoothMonitoringHeading = () => (
 );
 
 const BoothsIndicator: React.FC = () => {
+  const { booths, loading, error } = useUserBooths();
+
+  if (loading) {
+    return (
+      <Stack direction="row" spacing={1.5} my={3}>
+        <Skeleton variant="rectangular" width={90} height={90} />
+        <Skeleton variant="rectangular" width={90} height={90} />
+        <Skeleton variant="rectangular" width={90} height={90} />
+      </Stack>
+    );
+  }
+
+  if (error || !booths) {
+    return (
+      <Stack direction="row" spacing={1.5} my={3}>
+        <GenericErrorAlert />
+      </Stack>
+    );
+  }
+
   return (
     <Stack direction="row" spacing={1.5} my={3}>
-      <IndicatorBox />
-      <IndicatorBox />
-      <IndicatorBox />
+      {booths.map((booth) => (
+        <IndicatorBox
+          key={booth.id}
+          id={booth.id}
+          boothNumber={booth.boothNumber}
+        />
+      ))}
     </Stack>
   );
 };
 
-const IndicatorBox: React.FC = () => {
+interface IndicatorBoxProps {
+  id: string;
+  boothNumber: number;
+}
+
+const IndicatorBox: React.FC<IndicatorBoxProps> = ({ id, boothNumber }) => {
   return (
     <Box
       width={90}
@@ -31,7 +62,7 @@ const IndicatorBox: React.FC = () => {
       }}
     >
       <Stack alignItems="center" justifyContent="center" height="100%">
-        <Typography variant="headline-md">1</Typography>
+        <Typography variant="headline-md">{boothNumber}</Typography>
         <Stack direction="row" justifyContent="center" spacing={0.5}>
           <IndicatorIcon
             iconClassName="bx bx-phone"
