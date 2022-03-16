@@ -19,7 +19,7 @@ export const fetchUsersByClientName = async (
 
 export const login = async (id: string, password: string): Promise<User> => {
   try {
-    const res = await api.post<User>(`/users/wartel-login`, { id, password });
+    const res = await api.post<User>(`users/wartel-login`, { id, password });
     return res.data;
   } catch (error: any | AxiosError) {
     if (axios.isAxiosError(error)) {
@@ -31,7 +31,7 @@ export const login = async (id: string, password: string): Promise<User> => {
 
 export const getUserProfile = async (): Promise<User> => {
   try {
-    const res = await api.get<User>(`/users/profile`);
+    const res = await api.get<User>(`users/profile`);
     return res.data;
   } catch (error: any | AxiosError) {
     if (axios.isAxiosError(error)) {
