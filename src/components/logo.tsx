@@ -1,7 +1,7 @@
 import React from "react";
 import logoImg from "public/images/png/logo.png";
 import Image from "next/image";
-import { Box } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 
 interface Props {
   width: number;
@@ -10,8 +10,9 @@ interface Props {
 
 export const HalukaLogo: React.FC = () => {
   return (
-    <Box>
-      <Image src={logoImg} width={90} height={40.5} layout="intrinsic" />
-    </Box>
+    <Stack direction="row" spacing={1.5} alignItems="center">
+      <Image src={logoImg} width={29} height={36.2} layout="intrinsic" />
+      <Typography variant="title-sm">Haluka</Typography>
+    </Stack>
   );
 };

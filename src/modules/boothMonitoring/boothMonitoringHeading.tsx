@@ -39,7 +39,7 @@ const BoothsIndicator: React.FC = () => {
       {booths.map((booth) => (
         <IndicatorBox
           key={booth.id}
-          id={booth.id}
+          boothId={booth.id}
           boothNumber={booth.boothNumber}
         />
       ))}
@@ -48,12 +48,15 @@ const BoothsIndicator: React.FC = () => {
 };
 
 interface IndicatorBoxProps {
-  id: string;
+  boothId: string;
   boothNumber: number;
 }
 
-const IndicatorBox: React.FC<IndicatorBoxProps> = ({ id, boothNumber }) => {
-  const { bills } = useBoothBills(id);
+const IndicatorBox: React.FC<IndicatorBoxProps> = ({
+  boothId,
+  boothNumber,
+}) => {
+  const { bills } = useBoothBills(boothId);
   const [indicators, setIndicators] = React.useState<{
     active: boolean;
     pending: boolean;

@@ -17,6 +17,7 @@ export const palette: PaletteOptions = {
   },
   secondary: {
     main: "#D7E3F8",
+    light: "#EAF0F8",
   },
   neutral: {
     main: "#5D5E62",
@@ -26,8 +27,10 @@ export const palette: PaletteOptions = {
   },
   error: {
     main: "#BA1B1B",
+    light: "#FFDAD4",
   },
   success: {
     main: "#09814A",
+    light: "#C0FFD3",
   },
 };

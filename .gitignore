@@ -38,5 +38,6 @@ yarn-error.log*
 *.tsbuildinfo
 
 # ignore all playground files
+src/playground
 src/pages/playground
 src/modules/playground

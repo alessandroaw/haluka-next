@@ -16,7 +16,11 @@ export const MainAppBar: React.FC = () => {
     <AppBar
       color="inherit"
       elevation={0}
-      position="static"
+      position="sticky"
+      sx={{
+        top: 0,
+        left: 0,
+      }}
       // sx={{ borderBottom: "3px solid #FDFCFF " }}
     >
       <Container maxWidth="lg" sx={{ py: "11.75px" }}>
