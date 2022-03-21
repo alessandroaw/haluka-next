@@ -1,6 +1,7 @@
 import { Box, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
+import { useMonitoringContext } from "src/context/monitoringContext";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
@@ -62,6 +63,7 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
     pending: boolean;
   }>({ active: false, pending: false });
 
+  const { setSelectedBooth } = useMonitoringContext();
   React.useEffect(() => {
     if (bills) {
       const hasActiveBill = bills.some((bill) => bill.status === 1);
@@ -70,6 +72,10 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
       setIndicators({ active: hasActiveBill, pending: hasPendingBill });
     }
   }, [bills]);
+
+  const handleClick = () => {
+    setSelectedBooth(boothId);
+  };
 
   const renderIndicator = () => {
     if (!bills) {
@@ -106,6 +112,7 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
     <Box
       width={90}
       height={90}
+      onClick={handleClick}
       sx={{
         borderRadius: "12px",
         border: "1px solid #73777F",

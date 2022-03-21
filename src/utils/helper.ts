@@ -15,6 +15,32 @@ export const divideEqually = (arr: any[], n: number) => {
   return result;
 };
 
+export const calculateCallDuration = (durationInSec: number): string => {
+  // For result
+  const durationMin = Math.floor(durationInSec / 60);
+
+  if (durationMin > 60) {
+    const durationHour = Math.floor(durationMin / 60);
+    const additionalMin = durationMin % 60;
+    const additionalSec = Math.floor(durationInSec % 60);
+    return `${durationHour}:${additionalMin < 10 ? "0" : ""}${additionalMin}:${
+      additionalSec < 10 ? "0" : ""
+    }${additionalSec}`;
+  }
+  const additionalSec = Math.floor(durationInSec % 60);
+  return `${durationMin}:${additionalSec < 10 ? "0" : ""}${additionalSec}`;
+};
+
+export const numberToRupiahString = (number: number) => {
+  const rupiah = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
+    minimumFractionDigits: 0,
+  });
+
+  return rupiah.format(number);
+};
+
 export const extractContent = (s: string) => {
   const span = document.createElement("span");
   span.innerHTML = s;
