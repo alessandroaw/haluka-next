@@ -2,7 +2,14 @@ import {
   CheckCircle as CheckedIcon,
   RadioButtonUnchecked as UncheckedIcon,
 } from "@mui/icons-material";
-import { Box, Checkbox, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Checkbox,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
@@ -11,9 +18,9 @@ import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
 import shallow from "zustand/shallow";
+import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
 import { useBoothFocus } from "./useBoothFocus";
-import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 
 export const BoothBillPanels: React.FC = () => {
   const { booths, loading, error } = useUserBooths();
@@ -22,7 +29,7 @@ export const BoothBillPanels: React.FC = () => {
 
   if (loading) {
     return (
-      <Stack direction="row" spacing={1.5} alignItems="flex-start">
+      <Stack direction="row" mt={3} spacing={1.5} alignItems="flex-start">
         {Array.from(Array(5).keys()).map((x, index) => (
           <Skeleton
             key={index}
@@ -41,7 +48,7 @@ export const BoothBillPanels: React.FC = () => {
   }
 
   return (
-    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+    <Stack direction="row" spacing={1.5} mt={3} alignItems="flex-start">
       {booths.map((booth) => (
         <BoothBox
           key={booth.id}
@@ -158,19 +165,22 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
       >
         <Typography variant="title-md">KBU {booth.boothNumber}</Typography>
 
-        <RoundedButton
+        {/* Weird error persist if using rounded button */}
+        <Button
           onClick={handleBatchPayment}
           disableElevation
           size="small"
           variant="contained"
-          disabled={!(batchBoothId === booth.id)}
+          disabled={batchBoothId !== booth.id}
           sx={{
             opacity: batchBoothId === booth.id ? 1 : 0,
             transition: "opacity .3s ease-in-out",
+            borderRadius: "100px",
+            textTransform: "initial",
           }}
         >
           Bayar ({billBatch.length})
-        </RoundedButton>
+        </Button>
       </Stack>
       {bills.length === 0 ? (
         <Box mt={1} px={0.5}>

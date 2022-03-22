@@ -6,6 +6,7 @@ interface BatchPaymentState {
   batchBoothId: string;
   addBillToBatch: (bill: Bill) => void;
   removeBillFromBatch: (bill: Bill) => void;
+  clearBatch: () => void;
 }
 
 // Create useMonitoringStore using zustand create
@@ -44,8 +45,9 @@ export const useBatchPayment = create<BatchPaymentState>((set, get) => ({
       }
     }
   },
-  // isBillInBatch check if bill is in billBatch by first checking whether the booth id is the same
-  // then check if the bill id is the same
+  // clearBatch reset batchBoothId and billBatch
+  clearBatch: () =>
+    set((state) => ({ ...state, batchBoothId: "", billBatch: [] })),
 }));
 
 export const isBillInBatch = (

@@ -12,7 +12,6 @@ export const BoothMonitoringPage: NextPage = () => {
       <MainAppBar />
       <Container maxWidth="lg">
         <BoothMonitoringHeading />
-        <BoothFilterChips />
         <BoothBillPanels />
       </Container>
     </>

@@ -11,10 +11,4 @@ const api = axios.create({
 
 api.defaults.withCredentials = true;
 
-// Request Log
-api.interceptors.request.use((request) => {
-  console.log(`axios request: ${request.method} | ${request.url}`);
-  return request;
-});
-
 export default api;

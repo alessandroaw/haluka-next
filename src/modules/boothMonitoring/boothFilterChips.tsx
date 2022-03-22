@@ -33,7 +33,7 @@ export const BoothFilterChips: React.FC = () => {
   };
 
   return (
-    <Stack spacing={2} mt={3} mb={2}>
+    <Stack spacing={2} mt={3}>
       <Stack direction="row" spacing={1}>
         <FilterChip
           label="Seluruh KBU"

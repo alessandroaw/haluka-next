@@ -15,3 +15,12 @@ export const lowEmphasisIn = keyframes`
     opacity: 0.63;
   }
 `;
+
+export const fadeIn = keyframes`
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+`;

@@ -14,6 +14,7 @@ import { GenericErrorAlert } from "src/components/alert";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
+import { useBatchPayment } from "./useBatchPayment";
 import { useBoothFocus } from "./useBoothFocus";
 
 export const BoothMonitoringHeading = () => (
@@ -81,6 +82,7 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
 
   const selectedBoothId = useBoothFocus((state) => state.selectedBoothId);
   const setSelectedBooth = useBoothFocus((state) => state.setSelectedBooth);
+  const clearBatch = useBatchPayment((state) => state.clearBatch);
 
   React.useEffect(() => {
     if (bills) {
@@ -92,6 +94,9 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
   }, [bills]);
 
   const handleClick = () => {
+    if (selectedBoothId === "") {
+      clearBatch();
+    }
     setSelectedBooth(boothId === selectedBoothId ? "" : boothId);
   };
 
