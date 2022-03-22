@@ -1,10 +1,19 @@
-import { Box, Divider, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Divider,
+  Fade,
+  Skeleton,
+  Slide,
+  Stack,
+  Theme,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
-import { useMonitoringContext } from "src/context/monitoringContext";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
+import { useMonitoringStore } from "./useMonitoringStore";
 
 export const BoothMonitoringHeading = () => (
   <>
@@ -63,7 +72,11 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
     pending: boolean;
   }>({ active: false, pending: false });
 
-  const { setSelectedBooth } = useMonitoringContext();
+  const selectedBoothId = useMonitoringStore((state) => state.selectedBoothId);
+  const setSelectedBooth = useMonitoringStore(
+    (state) => state.setSelectedBooth
+  );
+
   React.useEffect(() => {
     if (bills) {
       const hasActiveBill = bills.some((bill) => bill.status === 1);
@@ -74,7 +87,7 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
   }, [bills]);
 
   const handleClick = () => {
-    setSelectedBooth(boothId);
+    setSelectedBooth(boothId === selectedBoothId ? "" : boothId);
   };
 
   const renderIndicator = () => {
@@ -115,14 +128,25 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
       onClick={handleClick}
       sx={{
         borderRadius: "12px",
-        border: "1px solid #73777F",
+        borderWidth: "2px",
+        borderStyle: "solid",
+        borderColor: boothId === selectedBoothId ? "primary.main" : "#73777F",
         cursor: "pointer",
+        transition: "all 0.3s ease-in-out",
       }}
     >
       <Stack alignItems="center" justifyContent="center" height="100%">
         <Typography variant="headline-md">{boothNumber}</Typography>
         <Stack direction="row" justifyContent="center" spacing={0.5}>
-          {renderIndicator()}
+          {selectedBoothId === boothId ? (
+            <IndicatorIcon
+              backgroundColor="primary.main"
+              iconClassName="bx bx-check"
+              color="white"
+            />
+          ) : (
+            renderIndicator()
+          )}
         </Stack>
       </Stack>
     </Box>
@@ -132,17 +156,20 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
 interface IndicatorIconProps {
   iconClassName: string;
   backgroundColor: string;
+  color?: string;
 }
 
 const IndicatorIcon: React.FC<IndicatorIconProps> = ({
   iconClassName,
   backgroundColor,
+  color = "black",
 }) => {
   return (
     <Box
       sx={{
         bgcolor: backgroundColor,
         borderRadius: "50%",
+        color,
         width: "2.2rem",
         height: "2.2rem",
         position: "relative",

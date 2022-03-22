@@ -1,15 +1,15 @@
 import { Box, Skeleton, Stack, Typography } from "@mui/material";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
-import { useMonitoringContext } from "src/context/monitoringContext";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
+import { useMonitoringStore } from "./useMonitoringStore";
 
 export const BoothBillPanels: React.FC = () => {
   const { booths, loading, error } = useUserBooths();
-  const { selectedBoothId } = useMonitoringContext();
+  const selectedBoothId = useMonitoringStore((state) => state.selectedBoothId);
 
   if (loading) {
     return (
@@ -28,7 +28,6 @@ export const BoothBillPanels: React.FC = () => {
 
   return (
     <Stack direction="row" spacing={1.5} alignItems="flex-start">
-      <BoothBox booth={booths[0]} lowEmphasis />
       {booths.map((booth) => (
         <BoothBox
           key={booth.id}
@@ -99,6 +98,7 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
           display: lowEmphasis ? "block" : "none",
           backgroundColor: "#FFF",
           opacity: lowEmphasis ? 0.63 : 0,
+          transition: "all 0.3s ease-in-out",
           borderRadius: "16px",
           zIndex: 1000,
         },

@@ -25,7 +25,9 @@ export const BoothFilterChips: React.FC = () => {
 
   const handleChipClick = (chip: BoothFilterKeys) => {
     setFilterValues({
-      ...filterValues,
+      all: false,
+      active: false,
+      pending: false,
       [chip]: !filterValues[chip],
     });
   };
