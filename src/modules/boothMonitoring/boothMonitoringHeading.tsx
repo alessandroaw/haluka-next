@@ -106,11 +106,7 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
 
   const renderIndicator = () => {
     if (!bills) {
-      return (
-        <>
-          <Skeleton variant="circular" width={22} height={22} />
-        </>
-      );
+      return <Skeleton variant="circular" width={22} height={22} />;
     }
 
     const selected = selectedBoothId === boothId;
@@ -156,7 +152,14 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
           <Stack
             direction="row"
             justifyContent="center"
-            spacing={selected ? 0 : 0.5}
+            spacing={
+              (selected ||
+                (!selected && indicators.pending) ||
+                (!selected && indicators.active)) &&
+              !(!selected && indicators.active && indicators.pending)
+                ? 0
+                : 0.5
+            }
           >
             <IndicatorIcon
               backgroundColor="primary.main"

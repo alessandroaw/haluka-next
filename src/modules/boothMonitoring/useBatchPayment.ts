@@ -32,8 +32,6 @@ export const useBatchPayment = create<BatchPaymentState>((set, get) => ({
         selectedBoothId: bill.boothId,
       }));
     }
-    console.log("Add Bill to Batch");
-    console.log(get());
   },
   // removeBillFromBatch when bill.boothId is equal to batchBoothId
   // otherwise do nothing
@@ -52,8 +50,6 @@ export const useBatchPayment = create<BatchPaymentState>((set, get) => ({
           ],
         }));
       }
-      console.log("Removed bill from batch");
-      console.log(get());
     }
   },
   // clearBatch reset batchBoothId and billBatch

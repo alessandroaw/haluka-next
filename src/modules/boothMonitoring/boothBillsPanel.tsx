@@ -13,10 +13,12 @@ import {
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
-import { useBoothBills } from "src/swr-cache/useBoothBills";
+import { payBill } from "src/repositories/bills";
+import { boothBillsKey, useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
+import { mutate } from "swr";
 import shallow from "zustand/shallow";
 import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
@@ -209,6 +211,16 @@ interface BillBoxProps {
 }
 
 const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = React.useState(false);
+
+  const handleBillPayment = () => {
+    setIsPaymentDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsPaymentDialogOpen(false);
+  };
+
   const { addBillToBatch, removeBillFromBatch, billBatch, batchBoothId } =
     useBatchPayment(
       (state) => ({
@@ -234,10 +246,6 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
     } else {
       removeBillFromBatch(bill);
     }
-  };
-
-  const handleBillPayment = () => {
-    console.log("bill paid");
   };
 
   return (
@@ -270,8 +278,13 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
             inputProps={{ "aria-label": "primary checkbox" }}
             checked={isChecked}
             onChange={handleSelection}
-            icon={<UncheckedIcon />}
-            checkedIcon={<CheckedIcon />}
+            sx={{
+              i: {
+                fontSize: "2.4rem",
+              },
+            }}
+            icon={<i className="bx bx-circle" />}
+            checkedIcon={<i className="bx bxs-check-circle" />}
           />
         )}
       </Stack>
@@ -291,6 +304,11 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
           </RoundedButton>
         )}
       </Stack>
+      <PaymentConfirmationDialog
+        onClose={handleClose}
+        bills={[bill]}
+        open={isPaymentDialogOpen}
+      />
     </Box>
   );
 };

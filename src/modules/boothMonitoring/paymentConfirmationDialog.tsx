@@ -14,6 +14,10 @@ import { Button, RoundedButton } from "src/components/button";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
 import { Bill, Call } from "src/types/models";
 import { mockBillClosed } from "src/playground/mock-data";
+import { payBill } from "src/repositories/bills";
+import { mutate } from "swr";
+import { boothBillsKey } from "src/swr-cache/useBoothBills";
+import { useBatchPayment } from "./useBatchPayment";
 
 export const PaymentConfirmationDialogPlayground: React.FC<any> = (props) => {
   const [open, setOpen] = React.useState(false);
@@ -53,15 +57,26 @@ interface PaymentConfirmationDialogProps {
 export const PaymentConfirmationDialog: React.FunctionComponent<
   PaymentConfirmationDialogProps
 > = ({ open, onClose, bills }) => {
+  const [loading, setLoading] = React.useState(false);
+  const clearBatch = useBatchPayment((state) => state.clearBatch);
   const billsTotal = bills.reduce((acc, bill) => acc + bill.total, 0);
 
-  const handleConfirmation = () => {
-    alert("Confirmed");
-    onClose();
+  const handleConfirmation = async () => {
+    setLoading(true);
+    try {
+      const billIds = bills.map((bill) => bill.id);
+      await payBill(billIds);
+      mutate(boothBillsKey(bills[0].boothId));
+      clearBatch();
+      onClose();
+    } catch (e) {
+      console.error(e);
+      alert("Terjadi kesalahan saat menyelesaikan pembayaran");
+    }
+    setLoading(false);
   };
 
   const handleCancelation = () => {
-    console.log("Rejected");
     onClose();
   };
 
@@ -74,6 +89,7 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
       PaperProps={{
         sx: {
           borderRadius: "16px",
+          minWidth: "560px",
         },
       }}
     >
@@ -86,11 +102,15 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
       >
         <Stack>
           <Typography gutterBottom variant="title-md">
-            Mengakumulasi pembayaran {bills.length} sesi
+            {bills.length === 1
+              ? "Mengonfirmasi pembayaran sesi"
+              : `Mengakumulasi pembayaran ${bills.length} sesi`}
           </Typography>
           <Typography color="GrayText" variant="body-sm">
-            Apakah Anda yakin ingin mengonfirmasi pembayaran {bills.length} sesi
-            ini sekaligus?
+            {bills.length === 1
+              ? "Apakah Anda yakin ingin mengonfirmasi pembayaran sesi ini?"
+              : `Apakah Anda yakin ingin mengonfirmasi pembayaran ${bills.length} sesi
+              ini sekaligus?`}
           </Typography>
         </Stack>
       </DialogTitle>
@@ -130,6 +150,7 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
           <RoundedButton
             fullWidth
             variant="outlined"
+            disabled={loading}
             onClick={handleCancelation}
           >
             Batal
@@ -138,6 +159,7 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
             fullWidth
             disableElevation
             variant="contained"
+            loading={loading}
             color="primary"
             onClick={handleConfirmation}
             autoFocus
