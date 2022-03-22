@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { AvatarButton } from "src/components/button/avatarButton";
 import { HalukaLogo } from "src/components/logo";
+import { kBorderColor } from "src/utils/styles";
 
 export const MainAppBar: React.FC = () => {
   const Navigations: { [key: string]: number } = {
@@ -20,16 +21,24 @@ export const MainAppBar: React.FC = () => {
       sx={{
         top: 0,
         left: 0,
+        borderBottom: `2px solid ${kBorderColor}`,
       }}
-      // sx={{ borderBottom: "3px solid #FDFCFF " }}
     >
-      <Container maxWidth="lg" sx={{ py: "11.75px" }}>
-        <Toolbar disableGutters>
+      <Container
+        maxWidth="lg"
+        // sx={{ py: "11.75px" }}
+      >
+        <Toolbar disableGutters sx={{ alignItems: "stretch" }}>
           <HalukaLogo />
           <Tabs
             value={tabValue}
             aria-label="simple tabs example"
-            sx={{ ml: 4, flexGrow: 1 }}
+            sx={{
+              ml: 4,
+              flexGrow: 1,
+              // height: "100%",
+              // alignSelf: "flex-end",
+            }}
           >
             <LinkTab href="/booth-monitoring" label="Monitoring KBU" />
             <LinkTab href="/transaction-history" label="Riwayat Panggilan" />
@@ -53,6 +62,8 @@ const LinkTab: React.FC<LinkTabProps> = ({ label, href }) => {
       component="a"
       color="black"
       sx={{
+        // height: "100%",
+        // pb: 3,
         textTransform: "initial",
       }}
       onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {

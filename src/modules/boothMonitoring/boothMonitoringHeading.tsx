@@ -13,7 +13,11 @@ import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
-import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
+import {
+  kBorderColor,
+  kCustomContainerLight,
+  kErrorContainerLight,
+} from "src/utils/styles";
 import { useBatchPayment } from "./useBatchPayment";
 // import { useBoothFocus as useBatchPayment } from "./useBoothFocus";
 
@@ -21,7 +25,7 @@ export const BoothMonitoringHeading = () => (
   <>
     <Typography variant="headline-lg">Monitoring KBU</Typography>
     <BoothsIndicator />
-    <Divider />
+    <Divider sx={{ borderWidth: "1px", borderColor: kBorderColor }} />
   </>
 );
 
