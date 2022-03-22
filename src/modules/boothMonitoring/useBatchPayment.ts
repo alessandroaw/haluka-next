@@ -2,6 +2,8 @@ import { Bill } from "src/types/models";
 import create from "zustand";
 
 interface BatchPaymentState {
+  selectedBoothId: string;
+  setSelectedBooth: (boothId: string) => void;
   billBatch: Bill[];
   batchBoothId: string;
   addBillToBatch: (bill: Bill) => void;
@@ -11,6 +13,9 @@ interface BatchPaymentState {
 
 // Create useMonitoringStore using zustand create
 export const useBatchPayment = create<BatchPaymentState>((set, get) => ({
+  selectedBoothId: "",
+  setSelectedBooth: (boothId: string) =>
+    set((state) => ({ ...state, selectedBoothId: boothId })),
   billBatch: [],
   batchBoothId: "",
   // addBillToBatch when bill.boothId is equal to batchBoothId
@@ -24,8 +29,11 @@ export const useBatchPayment = create<BatchPaymentState>((set, get) => ({
         ...state,
         billBatch: [bill],
         batchBoothId: bill.boothId,
+        selectedBoothId: bill.boothId,
       }));
     }
+    console.log("Add Bill to Batch");
+    console.log(get());
   },
   // removeBillFromBatch when bill.boothId is equal to batchBoothId
   // otherwise do nothing
@@ -37,12 +45,15 @@ export const useBatchPayment = create<BatchPaymentState>((set, get) => ({
         set((state) => ({
           ...state,
           batchBoothId: billBatch.length === 1 ? "" : billBatch[0].boothId,
+          selectedBoothId: billBatch.length === 1 ? "" : billBatch[0].boothId,
           billBatch: [
             ...billBatch.slice(0, billIndex),
             ...billBatch.slice(billIndex + 1),
           ],
         }));
       }
+      console.log("Removed bill from batch");
+      console.log(get());
     }
   },
   // clearBatch reset batchBoothId and billBatch

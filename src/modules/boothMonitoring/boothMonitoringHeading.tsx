@@ -15,7 +15,7 @@ import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
 import { useBatchPayment } from "./useBatchPayment";
-import { useBoothFocus } from "./useBoothFocus";
+// import { useBoothFocus as useBatchPayment } from "./useBoothFocus";
 
 export const BoothMonitoringHeading = () => (
   <>
@@ -80,8 +80,8 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
     pending: boolean;
   }>({ active: false, pending: false });
 
-  const selectedBoothId = useBoothFocus((state) => state.selectedBoothId);
-  const setSelectedBooth = useBoothFocus((state) => state.setSelectedBooth);
+  const selectedBoothId = useBatchPayment((state) => state.selectedBoothId);
+  const setSelectedBooth = useBatchPayment((state) => state.setSelectedBooth);
   const clearBatch = useBatchPayment((state) => state.clearBatch);
 
   React.useEffect(() => {
@@ -94,15 +94,13 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
   }, [bills]);
 
   const handleClick = () => {
-    if (selectedBoothId === "") {
-      clearBatch();
-    }
     setSelectedBooth(boothId === selectedBoothId ? "" : boothId);
+    clearBatch();
   };
 
   const handleClickAway = () => {
     if (boothId === selectedBoothId) {
-      setSelectedBooth("");
+      // setSelectedBooth("");
     }
   };
 
@@ -115,27 +113,30 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
       );
     }
 
+    const selected = selectedBoothId === boothId;
+
     return (
       <>
-        {!indicators.active && !indicators.pending && (
+        {/* {!selected && !indicators.active && !indicators.pending && (
           <Box width="2.2rem" height="2.2rem" />
-        )}
-        {indicators.active && (
-          <IndicatorIcon
-            iconClassName="bx bx-phone"
-            backgroundColor={kCustomContainerLight}
-          />
-        )}
-        {indicators.pending && (
-          <IndicatorIcon
-            iconClassName="bx bx-receipt"
-            backgroundColor={kErrorContainerLight}
-          />
-        )}
+        )} */}
+        <IndicatorIcon
+          iconClassName="bx bx-phone"
+          backgroundColor={kCustomContainerLight}
+          showCondition={!selected && indicators.active}
+          fromRight
+        />
+        <IndicatorIcon
+          iconClassName="bx bx-receipt"
+          backgroundColor={kErrorContainerLight}
+          showCondition={!selected && indicators.pending}
+          fromRight
+        />
       </>
     );
   };
 
+  const selected = selectedBoothId === boothId;
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
       <Box
@@ -152,16 +153,18 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
       >
         <Stack alignItems="center" justifyContent="center" height="100%">
           <Typography variant="headline-md">{boothNumber}</Typography>
-          <Stack direction="row" justifyContent="center" spacing={0.5}>
-            {selectedBoothId === boothId ? (
-              <IndicatorIcon
-                backgroundColor="primary.main"
-                iconClassName="bx bx-check"
-                color="white"
-              />
-            ) : (
-              renderIndicator()
-            )}
+          <Stack
+            direction="row"
+            justifyContent="center"
+            spacing={selected ? 0 : 0.5}
+          >
+            <IndicatorIcon
+              backgroundColor="primary.main"
+              iconClassName="bx bx-check"
+              color="white"
+              showCondition={selected}
+            />
+            {renderIndicator()}
           </Stack>
         </Stack>
       </Box>
@@ -173,12 +176,16 @@ interface IndicatorIconProps {
   iconClassName: string;
   backgroundColor: string;
   color?: string;
+  showCondition?: boolean;
+  fromRight?: boolean;
 }
 
 const IndicatorIcon: React.FC<IndicatorIconProps> = ({
   iconClassName,
   backgroundColor,
   color = "black",
+  showCondition = true,
+  fromRight = false,
 }) => {
   return (
     <Box
@@ -186,10 +193,18 @@ const IndicatorIcon: React.FC<IndicatorIconProps> = ({
         bgcolor: backgroundColor,
         borderRadius: "50%",
         color,
-        width: "2.2rem",
+        width: showCondition ? "2.2rem" : "0",
         height: "2.2rem",
+        opacity: showCondition ? 1 : 0,
+        transform: showCondition
+          ? "unset"
+          : `translateX(${fromRight ? "" : "-"}100%)`,
         position: "relative",
+        visibiliity: showCondition ? "visible" : "hidden",
+        transition:
+          "visibility 0.3s ease-in-out, opacity 0.3s ease-in-out, transform 0.3s ease-in-out",
         i: {
+          visibility: showCondition ? "visible" : "hidden",
           fontSize: "1.5rem",
           position: "absolute",
           left: "50%",

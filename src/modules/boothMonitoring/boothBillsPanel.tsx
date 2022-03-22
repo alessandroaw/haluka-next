@@ -20,11 +20,11 @@ import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
 import shallow from "zustand/shallow";
 import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
-import { useBoothFocus } from "./useBoothFocus";
+// import { useBoothFocus as useBatchPayment } from "./useBoothFocus";
 
 export const BoothBillPanels: React.FC = () => {
   const { booths, loading, error } = useUserBooths();
-  const selectedBoothId = useBoothFocus((state) => state.selectedBoothId);
+  const selectedBoothId = useBatchPayment((state) => state.selectedBoothId);
   const batchBoothId = useBatchPayment((state) => state.batchBoothId);
 
   if (loading) {
@@ -250,7 +250,6 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
         outlineColor: isChecked
           ? (theme) => theme.palette.primary.main
           : "unset",
-        transition: "all 0.3s ease-in-out",
       }}
     >
       <Stack direction="row" justifyContent="space-between" alignItems="center">
