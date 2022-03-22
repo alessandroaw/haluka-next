@@ -13,7 +13,6 @@ export const BoothMonitoringPage: NextPage = () => {
       <Container maxWidth="lg">
         <BoothMonitoringHeading />
         <BoothFilterChips />
-        <PaymentConfirmationDialogPlayground />
         <BoothBillPanels />
       </Container>
     </>

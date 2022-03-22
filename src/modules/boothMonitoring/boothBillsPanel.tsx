@@ -1,23 +1,37 @@
-import { Box, Skeleton, Stack, Typography } from "@mui/material";
+import {
+  CheckCircle as CheckedIcon,
+  RadioButtonUnchecked as UncheckedIcon,
+} from "@mui/icons-material";
+import { Box, Checkbox, Skeleton, Stack, Typography } from "@mui/material";
+import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
-import { useMonitoringStore } from "./useMonitoringStore";
+import shallow from "zustand/shallow";
+import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
+import { useBoothFocus } from "./useBoothFocus";
+import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 
 export const BoothBillPanels: React.FC = () => {
   const { booths, loading, error } = useUserBooths();
-  const selectedBoothId = useMonitoringStore((state) => state.selectedBoothId);
+  const selectedBoothId = useBoothFocus((state) => state.selectedBoothId);
+  const batchBoothId = useBatchPayment((state) => state.batchBoothId);
 
   if (loading) {
     return (
-      <Stack direction="row" spacing={1.5}>
-        <Skeleton variant="rectangular" width={204} height="30vh" />
-        <Skeleton variant="rectangular" width={204} height="30vh" />
-        <Skeleton variant="rectangular" width={204} height="30vh" />
-        <Skeleton variant="rectangular" width={204} height="30vh" />
+      <Stack direction="row" spacing={1.5} alignItems="flex-start">
+        {Array.from(Array(5).keys()).map((x, index) => (
+          <Skeleton
+            key={index}
+            variant="rectangular"
+            sx={{ borderRadius: "16px" }}
+            width={204}
+            height="30vh"
+          />
+        ))}
       </Stack>
     );
   }
@@ -32,7 +46,10 @@ export const BoothBillPanels: React.FC = () => {
         <BoothBox
           key={booth.id}
           booth={booth}
-          lowEmphasis={selectedBoothId !== "" && booth.id !== selectedBoothId}
+          lowEmphasis={
+            (selectedBoothId !== "" && booth.id !== selectedBoothId) ||
+            (batchBoothId !== "" && batchBoothId !== booth.id)
+          }
         />
       ))}
     </Stack>
@@ -48,7 +65,23 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
   booth,
   lowEmphasis = false,
 }) => {
+  const [isPaymentDialogOpen, setIsPaymentDialogOpen] = React.useState(false);
   const { bills, loading, error } = useBoothBills(booth.id);
+  const { billBatch, batchBoothId } = useBatchPayment(
+    (state) => ({
+      billBatch: state.billBatch,
+      batchBoothId: state.batchBoothId,
+    }),
+    shallow
+  );
+
+  const handleBatchPayment = () => {
+    setIsPaymentDialogOpen(true);
+  };
+
+  const handleClose = () => {
+    setIsPaymentDialogOpen(false);
+  };
 
   if (loading) {
     return (
@@ -61,12 +94,23 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
           backgroundColor: (theme) => theme.palette.secondary.light,
         }}
       >
-        <Typography variant="title-md" sx={{ px: 0.5, mt: 1 }}>
-          KBU {booth.boothNumber}
-        </Typography>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          sx={{ px: 0.5, mt: 1 }}
+        >
+          <Typography variant="title-md">KBU {booth.boothNumber}</Typography>
+          <Box height="33px" />
+        </Stack>
         <Stack mt={1} spacing={1}>
           {[0, 1, 2].map((x, index) => (
-            <Skeleton key={index} variant="rectangular" height={50} />
+            <Skeleton
+              key={index}
+              variant="rectangular"
+              sx={{ borderRadius: "12px" }}
+              height={50}
+            />
           ))}
         </Stack>
       </Box>
@@ -95,18 +139,39 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
           left: 0,
           bottom: 0,
           right: 0,
-          display: lowEmphasis ? "block" : "none",
+          height: lowEmphasis ? "auto" : 0,
+          // display: "block",
+          display: "block",
           backgroundColor: "#FFF",
           opacity: lowEmphasis ? 0.63 : 0,
-          transition: "all 0.3s ease-in-out",
+          transition: "opacity .3s ease-in-out",
           borderRadius: "16px",
           zIndex: 1000,
         },
       }}
     >
-      <Typography variant="title-md" sx={{ px: 0.5, mt: 1 }}>
-        KBU {booth.boothNumber}
-      </Typography>
+      <Stack
+        direction="row"
+        alignItems="center"
+        justifyContent="space-between"
+        sx={{ px: 0.5, mt: 1 }}
+      >
+        <Typography variant="title-md">KBU {booth.boothNumber}</Typography>
+
+        <RoundedButton
+          onClick={handleBatchPayment}
+          disableElevation
+          size="small"
+          variant="contained"
+          disabled={!(batchBoothId === booth.id)}
+          sx={{
+            opacity: batchBoothId === booth.id ? 1 : 0,
+            transition: "opacity .3s ease-in-out",
+          }}
+        >
+          Bayar ({billBatch.length})
+        </RoundedButton>
+      </Stack>
       {bills.length === 0 ? (
         <Box mt={1} px={0.5}>
           <Typography variant="body-sm" color="GrayText">
@@ -120,6 +185,11 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
           ))}
         </Stack>
       )}
+      <PaymentConfirmationDialog
+        onClose={handleClose}
+        bills={billBatch}
+        open={isPaymentDialogOpen}
+      />
     </Box>
   );
 };
@@ -129,6 +199,33 @@ interface BillBoxProps {
 }
 
 const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
+  const { addBillToBatch, removeBillFromBatch, billBatch, batchBoothId } =
+    useBatchPayment(
+      (state) => ({
+        addBillToBatch: state.addBillToBatch,
+        removeBillFromBatch: state.removeBillFromBatch,
+        billBatch: state.billBatch,
+        batchBoothId: state.batchBoothId,
+      }),
+      shallow
+    );
+
+  const [isChecked, setIsChecked] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsChecked(isBillInBatch(bill, batchBoothId, billBatch));
+  }, [bill, batchBoothId, billBatch]);
+
+  const handleSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const checked = event.target.checked;
+
+    if (checked) {
+      addBillToBatch(bill);
+    } else {
+      removeBillFromBatch(bill);
+    }
+  };
+
   const handleBillPayment = () => {
     console.log("bill paid");
   };
@@ -139,18 +236,36 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
       sx={{
         bgcolor: "#FFF",
         borderRadius: "12px",
+        outline: isChecked ? "2px solid" : "unset",
+        outlineColor: isChecked
+          ? (theme) => theme.palette.primary.main
+          : "unset",
+        transition: "all 0.3s ease-in-out",
       }}
     >
-      {/* Label by status */}
-      <Typography color="GrayText" display="block" variant="body-sm">
-        {bill.status === 1 ? "Aktif" : "Belum dibayar"}
-      </Typography>
-      {/* Total if any */}
-      {bill.total > 0 && (
-        <Typography display="block" variant="title-sm">
-          {numberToRupiahString(bill.total)}
-        </Typography>
-      )}
+      <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <Box>
+          <Typography color="GrayText" display="block" variant="body-sm">
+            {bill.status === 1 ? "Aktif" : "Belum dibayar"}
+          </Typography>
+          {bill.total > 0 && (
+            <Typography display="block" variant="title-sm">
+              {numberToRupiahString(bill.total)}
+            </Typography>
+          )}
+        </Box>
+        {/* Create rounded material ui checkbox */}
+        {bill.status === 2 && (
+          <Checkbox
+            color="primary"
+            inputProps={{ "aria-label": "primary checkbox" }}
+            checked={isChecked}
+            onChange={handleSelection}
+            icon={<UncheckedIcon />}
+            checkedIcon={<CheckedIcon />}
+          />
+        )}
+      </Stack>
       {/* List of call */}
       <Stack spacing={1} mt={1}>
         {bill.calls.map((call) => (
@@ -159,6 +274,7 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
         {bill.status === 2 && (
           <RoundedButton
             onClick={handleBillPayment}
+            disabled={billBatch.length > 0}
             variant="contained"
             disableElevation
           >

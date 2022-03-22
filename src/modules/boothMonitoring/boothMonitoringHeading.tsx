@@ -1,5 +1,6 @@
 import {
   Box,
+  ClickAwayListener,
   Divider,
   Fade,
   Skeleton,
@@ -13,7 +14,7 @@ import { GenericErrorAlert } from "src/components/alert";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
-import { useMonitoringStore } from "./useMonitoringStore";
+import { useBoothFocus } from "./useBoothFocus";
 
 export const BoothMonitoringHeading = () => (
   <>
@@ -29,9 +30,15 @@ const BoothsIndicator: React.FC = () => {
   if (loading) {
     return (
       <Stack direction="row" spacing={1.5} my={3}>
-        <Skeleton variant="rectangular" width={90} height={90} />
-        <Skeleton variant="rectangular" width={90} height={90} />
-        <Skeleton variant="rectangular" width={90} height={90} />
+        {Array.from(Array(5).keys()).map((x, index) => (
+          <Skeleton
+            key={x}
+            sx={{ borderRadius: "12px" }}
+            variant="rectangular"
+            width={90}
+            height={90}
+          />
+        ))}
       </Stack>
     );
   }
@@ -72,10 +79,8 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
     pending: boolean;
   }>({ active: false, pending: false });
 
-  const selectedBoothId = useMonitoringStore((state) => state.selectedBoothId);
-  const setSelectedBooth = useMonitoringStore(
-    (state) => state.setSelectedBooth
-  );
+  const selectedBoothId = useBoothFocus((state) => state.selectedBoothId);
+  const setSelectedBooth = useBoothFocus((state) => state.setSelectedBooth);
 
   React.useEffect(() => {
     if (bills) {
@@ -90,11 +95,16 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
     setSelectedBooth(boothId === selectedBoothId ? "" : boothId);
   };
 
+  const handleClickAway = () => {
+    if (boothId === selectedBoothId) {
+      setSelectedBooth("");
+    }
+  };
+
   const renderIndicator = () => {
     if (!bills) {
       return (
         <>
-          <Skeleton variant="circular" width={22} height={22} />
           <Skeleton variant="circular" width={22} height={22} />
         </>
       );
@@ -122,34 +132,35 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
   };
 
   return (
-    <Box
-      width={90}
-      height={90}
-      onClick={handleClick}
-      sx={{
-        borderRadius: "12px",
-        borderWidth: "2px",
-        borderStyle: "solid",
-        borderColor: boothId === selectedBoothId ? "primary.main" : "#73777F",
-        cursor: "pointer",
-        transition: "all 0.3s ease-in-out",
-      }}
-    >
-      <Stack alignItems="center" justifyContent="center" height="100%">
-        <Typography variant="headline-md">{boothNumber}</Typography>
-        <Stack direction="row" justifyContent="center" spacing={0.5}>
-          {selectedBoothId === boothId ? (
-            <IndicatorIcon
-              backgroundColor="primary.main"
-              iconClassName="bx bx-check"
-              color="white"
-            />
-          ) : (
-            renderIndicator()
-          )}
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <Box
+        width={90}
+        height={90}
+        onClick={handleClick}
+        sx={{
+          borderRadius: "12px",
+          borderWidth: boothId === selectedBoothId ? "2px" : "1px",
+          borderStyle: "solid",
+          borderColor: boothId === selectedBoothId ? "primary.main" : "#73777F",
+          cursor: "pointer",
+        }}
+      >
+        <Stack alignItems="center" justifyContent="center" height="100%">
+          <Typography variant="headline-md">{boothNumber}</Typography>
+          <Stack direction="row" justifyContent="center" spacing={0.5}>
+            {selectedBoothId === boothId ? (
+              <IndicatorIcon
+                backgroundColor="primary.main"
+                iconClassName="bx bx-check"
+                color="white"
+              />
+            ) : (
+              renderIndicator()
+            )}
+          </Stack>
         </Stack>
-      </Stack>
-    </Box>
+      </Box>
+    </ClickAwayListener>
   );
 };
 

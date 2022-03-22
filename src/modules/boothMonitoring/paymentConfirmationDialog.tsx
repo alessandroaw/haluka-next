@@ -86,11 +86,11 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
       >
         <Stack>
           <Typography gutterBottom variant="title-md">
-            Mengakumulasi pembayaran 2 sesi
+            Mengakumulasi pembayaran {bills.length} sesi
           </Typography>
           <Typography color="GrayText" variant="body-sm">
-            Apakah Anda yakin ingin mengonfirmasi pembayaran 2 sesi ini
-            sekaligus?
+            Apakah Anda yakin ingin mengonfirmasi pembayaran {bills.length} sesi
+            ini sekaligus?
           </Typography>
         </Stack>
       </DialogTitle>

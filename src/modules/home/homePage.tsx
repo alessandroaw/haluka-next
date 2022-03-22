@@ -3,7 +3,7 @@ import { Box, Container, Grid, Stack, Typography } from "@mui/material";
 import { NextPage } from "next";
 import Image from "next/image";
 import heroImg from "public/images/svg/login-hero.svg";
-import { kGridSpacingDefault } from "src/utils/constant";
+import { kGridSpacingDefault } from "src/utils/styles";
 import { LoginForm } from "./loginForm";
 import { useUser } from "src/swr-cache/useUser";
 import React from "react";

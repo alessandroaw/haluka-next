@@ -1,13 +1,13 @@
 import create from "zustand";
 
-interface MonitoringState {
+interface BoothFocusState {
   selectedBoothId: string;
   setSelectedBooth: (boothId: string) => void;
   clearSelectedBooth: () => void;
 }
 
 // Create useMonitoringStore using zustand create
-export const useMonitoringStore = create<MonitoringState>((set) => ({
+export const useBoothFocus = create<BoothFocusState>((set) => ({
   selectedBoothId: "",
   setSelectedBooth: (boothId: string) =>
     set((state) => ({ ...state, selectedBoothId: boothId })),
