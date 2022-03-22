@@ -36,8 +36,9 @@ export const MainAppBar: React.FC = () => {
             sx={{
               ml: 4,
               flexGrow: 1,
-              // height: "100%",
-              // alignSelf: "flex-end",
+              ".MuiTabs-scroller": {
+                display: "flex",
+              },
             }}
           >
             <LinkTab href="/booth-monitoring" label="Monitoring KBU" />
