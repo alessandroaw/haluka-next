@@ -29,6 +29,17 @@ export const login = async (id: string, password: string): Promise<User> => {
   }
 };
 
+export const logout = async (): Promise<void> => {
+  try {
+    const res = await api.get(`users/logout`);
+  } catch (error: any | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      throw error.response;
+    }
+    throw error;
+  }
+};
+
 export const getUserProfile = async (): Promise<User> => {
   try {
     const res = await api.get<User>(`users/profile`);

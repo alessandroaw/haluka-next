@@ -22,11 +22,11 @@ import { useBatchPayment } from "./useBatchPayment";
 // import { useBoothFocus as useBatchPayment } from "./useBoothFocus";
 
 export const BoothMonitoringHeading = () => (
-  <>
+  <Box mt={3}>
     <Typography variant="headline-lg">Monitoring KBU</Typography>
     <BoothsIndicator />
     <Divider sx={{ borderWidth: "1px", borderColor: kBorderColor }} />
-  </>
+  </Box>
 );
 
 const BoothsIndicator: React.FC = () => {

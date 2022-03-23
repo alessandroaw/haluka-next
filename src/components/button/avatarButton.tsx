@@ -10,6 +10,7 @@ import React from "react";
 import { useUser } from "src/swr-cache/useUser";
 import { getInitials } from "src/utils/helper";
 import { RoundedButton } from ".";
+import { logout } from "src/repositories/ auth";
 
 export interface AvatarButtonProps {
   anchorHorizontal?: "left" | "right";
@@ -87,8 +88,8 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({ handleClose }) => {
   const handleLogout = async () => {
     try {
       // TODO: Implement logout
-      // await logout();
-      // mutate();
+      await logout();
+      mutate();
     } catch (e) {
     } finally {
       handleClose();
