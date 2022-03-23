@@ -1,16 +1,25 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
+import { useRouter } from "next/router";
 import React from "react";
 import { FilterChip } from "src/components/chip";
-import { useCalls } from "src/swr-cache/useCalls";
+import { CallFilterQuery } from "src/types/query";
 import { kDateFilterItems } from "src/utils/constant";
 
 export const CallHistoryFilter: React.FC = ({}) => {
+  const { push, query } = useRouter();
   const [selectedFilterIndex, setSelectedFilterIndex] =
     React.useState<number>(0);
-  const { calls, loading, error } = useCalls({
-    startedAt: kDateFilterItems[selectedFilterIndex].startedAt,
-    endedAt: kDateFilterItems[selectedFilterIndex].endedAt,
-  });
+
+  const handleFilterClick = (index: number) => () => {
+    setSelectedFilterIndex(index);
+    const newQuery: CallFilterQuery = {
+      ...query,
+      dateRange: `${index}`,
+    };
+    push({
+      query: newQuery,
+    });
+  };
 
   return (
     <Box
@@ -31,7 +40,7 @@ export const CallHistoryFilter: React.FC = ({}) => {
                 key={index}
                 label={label}
                 active={index === selectedFilterIndex}
-                onClick={() => setSelectedFilterIndex(index)}
+                onClick={handleFilterClick(index)}
               />
             ))}
             <FilterChip

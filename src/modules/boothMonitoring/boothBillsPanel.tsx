@@ -1,8 +1,4 @@
 import {
-  CheckCircle as CheckedIcon,
-  RadioButtonUnchecked as UncheckedIcon,
-} from "@mui/icons-material";
-import {
   Box,
   Button,
   Checkbox,
@@ -13,12 +9,10 @@ import {
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
-import { payBill } from "src/repositories/bills";
-import { boothBillsKey, useBoothBills } from "src/swr-cache/useBoothBills";
+import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
-import { mutate } from "swr";
 import shallow from "zustand/shallow";
 import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
