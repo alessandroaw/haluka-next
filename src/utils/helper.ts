@@ -142,3 +142,11 @@ export const stringToHTML = (str: string) => {
   var doc = parser.parseFromString(str, "text/html");
   return doc.body;
 };
+
+// Get n days before today
+export const getNDaysAgo = (day: number) =>
+  new Date(
+    new Date().getFullYear(),
+    new Date().getMonth(),
+    new Date().getDate() - day
+  );

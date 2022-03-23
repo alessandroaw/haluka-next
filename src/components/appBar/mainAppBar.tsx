@@ -8,7 +8,7 @@ import { kBorderColor } from "src/utils/styles";
 export const MainAppBar: React.FC = () => {
   const Navigations: { [key: string]: number } = {
     "booth-monitoring": 0,
-    "transaction-history": 1,
+    "call-history": 1,
   };
 
   const router = useRouter();
@@ -42,7 +42,7 @@ export const MainAppBar: React.FC = () => {
             }}
           >
             <LinkTab href="/booth-monitoring" label="Monitoring KBU" />
-            <LinkTab href="/transaction-history" label="Riwayat Panggilan" />
+            <LinkTab href="/call-history" label="Riwayat Panggilan" />
           </Tabs>
           <AvatarButton anchorHorizontal="right" />
         </Toolbar>

@@ -47,3 +47,9 @@ export type Call = {
   paidAt: null;
   endedAt: Date | null;
 };
+
+export interface DateFilterItem {
+  label: string;
+  startedAt: Date;
+  endedAt: Date;
+}

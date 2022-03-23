@@ -1,5 +1,6 @@
+import { Stack, Typography } from "@mui/material";
 import React from "react";
-import { Chip, Stack, Typography } from "@mui/material";
+import { FilterChip } from "src/components/chip";
 
 // TODO: Add filter compoonent logic and SWR logic
 interface BoothFilterValues {
@@ -54,30 +55,5 @@ export const BoothFilterChips: React.FC = () => {
       {/* TODO: Change this to reflect filter */}
       <Typography variant="body-md">Menampilkan seluruh KBU</Typography>
     </Stack>
-  );
-};
-
-interface FilterChipProps {
-  label: string;
-  onClick?: React.MouseEventHandler<HTMLDivElement>;
-  active?: boolean;
-}
-
-const FilterChip: React.FC<FilterChipProps> = ({
-  label,
-  onClick,
-  active = false,
-}) => {
-  return (
-    <Chip
-      label={label}
-      color={active ? "secondary" : "default"}
-      variant={active ? "filled" : "outlined"}
-      icon={active ? <i className="bx bx-check bx-md" /> : undefined}
-      onClick={onClick}
-      sx={{
-        borderRadius: "8px",
-      }}
-    />
   );
 };
