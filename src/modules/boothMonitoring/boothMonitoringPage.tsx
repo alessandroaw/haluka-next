@@ -1,5 +1,5 @@
 import { PaymentConfirmationDialogPlayground } from "./paymentConfirmationDialog";
-import { Container } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import { NextPage } from "next";
 import { MainAppBar } from "src/components/appBar";
 import { BoothBillPanels } from "./boothBillsPanel";
@@ -10,7 +10,7 @@ export const BoothMonitoringPage: NextPage = () => {
   return (
     <>
       <MainAppBar />
-      <Container maxWidth="lg">
+      <Container maxWidth="lg" sx={{ position: "relative" }}>
         <BoothMonitoringHeading />
         <BoothBillPanels />
       </Container>

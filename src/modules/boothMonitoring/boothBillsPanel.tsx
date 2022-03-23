@@ -50,7 +50,17 @@ export const BoothBillPanels: React.FC = () => {
   }
 
   return (
-    <Stack direction="row" spacing={1.5} mt={3} alignItems="flex-start">
+    <Stack
+      direction="row"
+      spacing={1.5}
+      mt={3}
+      // px={11}
+      alignItems="flex-start"
+      pb={3}
+      sx={{
+        overflowX: "scroll",
+      }}
+    >
       {booths.map((booth) => (
         <BoothBox
           key={booth.id}
@@ -134,6 +144,7 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
     <Box
       p={1}
       flexShrink={0}
+      id={`booth-${booth.boothNumber}`}
       mb={5}
       sx={{
         width: "204px",

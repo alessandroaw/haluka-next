@@ -100,12 +100,8 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
   const handleClick = () => {
     setSelectedBooth(boothId === selectedBoothId ? "" : boothId);
     clearBatch();
-  };
-
-  const handleClickAway = () => {
-    if (boothId === selectedBoothId) {
-      // setSelectedBooth("");
-    }
+    window.location.hash =
+      boothId === selectedBoothId ? "" : `booth-${boothNumber}`;
   };
 
   const renderIndicator = () => {
@@ -138,44 +134,42 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
 
   const selected = selectedBoothId === boothId;
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
-      <Box
-        width={90}
-        height={90}
-        onClick={handleClick}
-        sx={{
-          borderRadius: "12px",
-          borderWidth: boothId === selectedBoothId ? "2px" : "1px",
-          borderStyle: "solid",
-          borderColor: boothId === selectedBoothId ? "primary.main" : "#73777F",
-          cursor: "pointer",
-        }}
-      >
-        <Stack alignItems="center" justifyContent="center" height="100%">
-          <Typography variant="headline-md">{boothNumber}</Typography>
-          <Stack
-            direction="row"
-            justifyContent="center"
-            spacing={
-              (selected ||
-                (!selected && indicators.pending) ||
-                (!selected && indicators.active)) &&
-              !(!selected && indicators.active && indicators.pending)
-                ? 0
-                : 0.5
-            }
-          >
-            <IndicatorIcon
-              backgroundColor="primary.main"
-              iconClassName="bx bx-check"
-              color="white"
-              showCondition={selected}
-            />
-            {renderIndicator()}
-          </Stack>
+    <Box
+      width={90}
+      height={90}
+      onClick={handleClick}
+      sx={{
+        borderRadius: "12px",
+        borderWidth: boothId === selectedBoothId ? "2px" : "1px",
+        borderStyle: "solid",
+        borderColor: boothId === selectedBoothId ? "primary.main" : "#73777F",
+        cursor: "pointer",
+      }}
+    >
+      <Stack alignItems="center" justifyContent="center" height="100%">
+        <Typography variant="headline-md">{boothNumber}</Typography>
+        <Stack
+          direction="row"
+          justifyContent="center"
+          spacing={
+            (selected ||
+              (!selected && indicators.pending) ||
+              (!selected && indicators.active)) &&
+            !(!selected && indicators.active && indicators.pending)
+              ? 0
+              : 0.5
+          }
+        >
+          <IndicatorIcon
+            backgroundColor="primary.main"
+            iconClassName="bx bx-check"
+            color="white"
+            showCondition={selected}
+          />
+          {renderIndicator()}
         </Stack>
-      </Box>
-    </ClickAwayListener>
+      </Stack>
+    </Box>
   );
 };
 
