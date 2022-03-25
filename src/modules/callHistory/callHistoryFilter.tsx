@@ -6,21 +6,6 @@ import { CallFilterQuery } from "src/types/query";
 import { kDateFilterItems } from "src/utils/constant";
 
 export const CallHistoryFilter: React.FC = ({}) => {
-  const { push, query } = useRouter();
-  const [selectedFilterIndex, setSelectedFilterIndex] =
-    React.useState<number>(0);
-
-  const handleFilterClick = (index: number) => () => {
-    setSelectedFilterIndex(index);
-    const newQuery: CallFilterQuery = {
-      ...query,
-      dateRange: `${index}`,
-    };
-    push({
-      query: newQuery,
-    });
-  };
-
   return (
     <Box
       p={3}
@@ -32,24 +17,7 @@ export const CallHistoryFilter: React.FC = ({}) => {
     >
       <Stack width="100%" alignItems="flex-start" spacing={3}>
         <Typography variant="title-md">Filter Riwayat Panggilan</Typography>
-        <Stack>
-          <Typography variant="title-sm">Periode Panggilan</Typography>
-          <Stack mt={1} direction="row" spacing={1}>
-            {kDateFilterItems.map(({ label }, index) => (
-              <FilterChip
-                key={index}
-                label={label}
-                active={index === selectedFilterIndex}
-                onClick={handleFilterClick(index)}
-              />
-            ))}
-            <FilterChip
-              label="Lainnya"
-              active={selectedFilterIndex === kDateFilterItems.length}
-              onClick={() => setSelectedFilterIndex(kDateFilterItems.length)}
-            />
-          </Stack>
-        </Stack>
+        <DateFilterChips />
         <Link
           variant="label-md"
           underline="hover"
@@ -63,5 +31,44 @@ export const CallHistoryFilter: React.FC = ({}) => {
         </Link>
       </Stack>
     </Box>
+  );
+};
+
+const DateFilterChips: React.FC = () => {
+  const { push, query } = useRouter();
+  const [selectedFilterIndex, setSelectedFilterIndex] = React.useState<number>(
+    query.dateRange ? parseInt((query as CallFilterQuery).dateRange ?? "0") : 0
+  );
+
+  const handleFilterClick = (index: number) => () => {
+    setSelectedFilterIndex(index);
+    const newQuery: CallFilterQuery = {
+      ...query,
+      dateRange: `${index}`,
+    };
+    push({
+      query: newQuery,
+    });
+  };
+
+  return (
+    <Stack>
+      <Typography variant="title-sm">Periode Panggilan</Typography>
+      <Stack mt={1} direction="row" spacing={1}>
+        {kDateFilterItems.map(({ label }, index) => (
+          <FilterChip
+            key={index}
+            label={label}
+            active={index === selectedFilterIndex}
+            onClick={handleFilterClick(index)}
+          />
+        ))}
+        <FilterChip
+          label="Lainnya"
+          active={selectedFilterIndex === kDateFilterItems.length}
+          onClick={() => setSelectedFilterIndex(kDateFilterItems.length)}
+        />
+      </Stack>
+    </Stack>
   );
 };

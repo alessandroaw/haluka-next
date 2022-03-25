@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Box,
   Dialog,
@@ -10,44 +9,14 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+import React from "react";
 import { Button, RoundedButton } from "src/components/button";
-import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
-import { Bill, Call } from "src/types/models";
-import { mockBillClosed } from "src/playground/mock-data";
 import { payBill } from "src/repositories/bills";
-import { mutate } from "swr";
 import { boothBillsKey } from "src/swr-cache/useBoothBills";
+import { Bill, Call } from "src/types/models";
+import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
+import { mutate } from "swr";
 import { useBatchPayment } from "./useBatchPayment";
-
-export const PaymentConfirmationDialogPlayground: React.FC<any> = (props) => {
-  const [open, setOpen] = React.useState(false);
-  const [bills, setBills] = React.useState<Bill[]>([
-    mockBillClosed,
-    mockBillClosed,
-  ]);
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  return (
-    <Box>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        Open alert dialog
-      </Button>
-      <PaymentConfirmationDialog
-        open={open}
-        onClose={handleClose}
-        bills={bills}
-      />
-    </Box>
-  );
-};
-
 interface PaymentConfirmationDialogProps {
   open: boolean;
   onClose: () => void;
