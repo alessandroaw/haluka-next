@@ -21,7 +21,7 @@ export const CallHistoryPage: NextPage = () => {
 const PageTitle: React.FC = () => {
   return (
     <Box mt={3}>
-      <Typography variant="headline-md">Riwayat Transaksi</Typography>
+      <Typography variant="headline-lg">Riwayat Transaksi</Typography>
     </Box>
   );
 };

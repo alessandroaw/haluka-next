@@ -1,13 +1,92 @@
-import React from "react";
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { useCalls } from "src/swr-cache/useCalls";
-import { kDateFilterItems } from "src/utils/constant";
-import { GenericErrorAlert } from "src/components/alert";
-import { prettyDateTime } from "src/utils/helper";
+import {
+  Box,
+  CircularProgress,
+  LinearProgress,
+  Stack,
+  Typography,
+} from "@mui/material";
+import {
+  DataGrid,
+  GridColDef,
+  GridRenderCellParams,
+  GridRowsProp,
+  GridToolbarColumnsButton,
+  GridToolbarContainer,
+  GridToolbarDensitySelector,
+  GridToolbarExport,
+  GridToolbarFilterButton,
+} from "@mui/x-data-grid";
 import { useRouter } from "next/router";
-import { RoundedButton } from "src/components/button";
-import { CallFilterQuery } from "src/types/query";
+import React from "react";
+import { GenericErrorAlert } from "src/components/alert";
+import { DataGridNoRowsOverlay } from "src/components/dataGrid";
+import { useCalls } from "src/swr-cache/useCalls";
 import { CallFilterParams } from "src/types/params";
+import { CallFilterQuery } from "src/types/query";
+import { kDateFilterItems } from "src/utils/constant";
+import {
+  calculateCallDuration,
+  numberToRupiahString,
+  prettyDateTime,
+} from "src/utils/helper";
+
+const callMethod = ["~", "GSM", "Suara Whatsapp", "Video Whatsapp"];
+
+const columnHeaderClassName = "haluka-datagrid--header";
+
+const columns: GridColDef[] = [
+  {
+    field: "createdAt",
+    headerName: "Waktu",
+    flex: 1,
+    headerClassName: columnHeaderClassName,
+    renderCell: (params: GridRenderCellParams<Date>) => {
+      const date = prettyDateTime(params.value);
+      return date;
+    },
+  },
+  // { field: "method", headerName: "No Nota", width: 150 },
+  // { field: "method", headerName: "No KBU", width: 150 },
+  {
+    field: "callNumber",
+    headerName: "No Tujuan",
+    flex: 1,
+    headerClassName: columnHeaderClassName,
+  },
+  {
+    field: "method",
+    headerName: "Metode Panggilan",
+    minWidth: 150,
+
+    headerClassName: columnHeaderClassName,
+    renderCell: (params: GridRenderCellParams<number>) =>
+      callMethod[params.value < 0 ? 0 : params.value],
+  },
+  {
+    field: "status",
+    headerName: "Status Pembayaran",
+    width: 150,
+    headerClassName: columnHeaderClassName,
+    renderCell: (params: GridRenderCellParams<number>) =>
+      params.value > 2 ? "Lunas" : "Belum Lunas",
+  },
+  {
+    field: "duration",
+    headerName: "Durasi",
+    minWidth: 100,
+    headerClassName: columnHeaderClassName,
+    renderCell: (params: GridRenderCellParams<number>) =>
+      calculateCallDuration(params.value),
+  },
+  {
+    field: "total",
+    headerName: "Biaya",
+    headerClassName: columnHeaderClassName,
+    width: 150,
+    renderCell: (params: GridRenderCellParams<number>) =>
+      numberToRupiahString(params.value),
+  },
+];
 
 const queryToParams = (query: CallFilterQuery) => {
   const { startedAt, endedAt } =
@@ -27,27 +106,78 @@ export const CallHistoryDataGrid: React.FC = ({}) => {
   const { query } = useRouter();
   const { calls, loading, error } = useCalls(queryToParams(query));
 
-  if (loading) {
-    return <CircularProgress />;
-  }
-
-  if (error || !calls) {
+  if (error) {
     return <GenericErrorAlert />;
   }
 
+  const toolbarHeight = 44;
+  const offset = 24 + toolbarHeight;
+
   return (
-    <Box>
-      <Stack>
-        {/* <pre>{JSON.stringify({ query }, null, 2)}</pre> */}
-        {calls.map((call, index) => (
-          <Stack direction="row" spacing={2}>
-            <Typography variant="label-lg">{index}</Typography>
-            <Typography variant="label-lg">
-              {prettyDateTime(call.createdAt)}
-            </Typography>
-          </Stack>
-        ))}
-      </Stack>
+    <Box mt={`${offset + 24}px`}>
+      <DataGrid
+        autoHeight
+        localeText={{
+          toolbarExport: "Unduh riwayat panggilan",
+          noRowsLabel: "Tidak ada data",
+        }}
+        sx={{
+          mb: 6,
+          ".haluka-datagrid--header": {
+            bgcolor: "secondary.light",
+          },
+        }}
+        components={{
+          LoadingOverlay: () => <LinearProgress />,
+          // NoRowsOverlay: () => <DataGridNoRowsOverlay />,
+          Toolbar: (props) => (
+            <Box
+              sx={{
+                position: "relative",
+                width: "100%",
+              }}
+            >
+              <Stack
+                className="toolbarContainer"
+                direction="row"
+                alignItems="center"
+                justifyContent="space-between"
+                width="100%"
+                sx={{
+                  position: "absolute",
+                  top: `-${offset}px`,
+                  width: "100%",
+                  // transform: "translateY(100%)",
+                }}
+              >
+                <Typography variant="body-md">
+                  Menampilkan 1-10 dari total 24 riwayat panggilan
+                </Typography>
+                <GridToolbarExport
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  sx={{
+                    textTransform: "none",
+                    borderRadius: "100px",
+                    padding: "10px 24px 10px 16px",
+                  }}
+                  csvOptions={{
+                    fileName: `Laporan Panggilan ${new Date().toLocaleDateString()}`,
+                    // fields: ["name", "email", "role"],
+                  }}
+                  {...props}
+                  startIcon={<i className="bx bx-download bx-md" />}
+                  label=""
+                />
+              </Stack>
+            </Box>
+          ),
+        }}
+        loading={loading || !calls}
+        rows={calls ?? []}
+        columns={columns}
+      />
     </Box>
   );
 };
