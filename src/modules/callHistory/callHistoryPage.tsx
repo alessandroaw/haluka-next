@@ -4,6 +4,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { MainAppBar } from "src/components/appBar";
 import { CallHistoryDataGrid } from "./callHistoryDataGrid";
 import { CallHistoryFilter } from "./callHistoryFilter";
+import { HalukaDateRangePicker } from "src/components/dateRangePicker";
 
 export const CallHistoryPage: NextPage = () => {
   return (
@@ -12,6 +13,7 @@ export const CallHistoryPage: NextPage = () => {
       <Container maxWidth="lg" sx={{ position: "relative" }}>
         <PageTitle />
         <CallHistoryFilter />
+        <HalukaDateRangePicker />
         <CallHistoryDataGrid />
       </Container>
     </>

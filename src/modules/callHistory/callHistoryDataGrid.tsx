@@ -1,25 +1,13 @@
-import {
-  Box,
-  CircularProgress,
-  LinearProgress,
-  Stack,
-  Typography,
-} from "@mui/material";
+import { Box, LinearProgress, Stack, Typography } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
   GridRenderCellParams,
-  GridRowsProp,
-  GridToolbarColumnsButton,
-  GridToolbarContainer,
-  GridToolbarDensitySelector,
   GridToolbarExport,
-  GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import { useRouter } from "next/router";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
-import { DataGridNoRowsOverlay } from "src/components/dataGrid";
 import { useCalls } from "src/swr-cache/useCalls";
 import { CallFilterParams } from "src/types/params";
 import { CallFilterQuery } from "src/types/query";
@@ -29,8 +17,7 @@ import {
   numberToRupiahString,
   prettyDateTime,
 } from "src/utils/helper";
-
-const callMethod = ["~", "GSM", "Suara Whatsapp", "Video Whatsapp"];
+import { kCallMethod } from "src/utils/constant";
 
 const columnHeaderClassName = "haluka-datagrid--header";
 
@@ -60,7 +47,7 @@ const columns: GridColDef[] = [
 
     headerClassName: columnHeaderClassName,
     renderCell: (params: GridRenderCellParams<number>) =>
-      callMethod[params.value < 0 ? 0 : params.value],
+      kCallMethod[params.value < 0 ? 0 : params.value],
   },
   {
     field: "status",
@@ -88,15 +75,20 @@ const columns: GridColDef[] = [
   },
 ];
 
-const queryToParams = (query: CallFilterQuery) => {
-  const { startedAt, endedAt } =
-    kDateFilterItems[parseInt(query.dateRange ?? "0")];
+const queryToParams = ({ dateRange, status, method }: CallFilterQuery) => {
+  const parsedDateRange = parseInt(dateRange ?? "0");
+  if (parsedDateRange === -1) {
+    // alert("custom filter");
+    return {};
+  }
+  const { startedAt, endedAt } = kDateFilterItems[parsedDateRange];
   const newCallFilterParams: CallFilterParams = {
     startedAt,
     endedAt,
-    status: query.status ? parseInt(query.status) : undefined,
-    method: query.method ? parseInt(query.method) : undefined,
-    boothNumber: query.boothNumber ? parseInt(query.boothNumber) : undefined,
+    status: status ? [status].flat() : undefined,
+    method: method ? [method].flat() : undefined,
+    // "method[]": query["method[]"] ? parseInt(query["method[]" : undefined,
+    // boothNumber: query.boothNumber ? parseInt(query.boothNumber) : undefined,
   };
 
   return newCallFilterParams;

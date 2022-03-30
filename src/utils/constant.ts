@@ -46,3 +46,5 @@ export const kDateFilterItems: DateFilterItem[] = [
     endedAt: getNDaysAgo(-1),
   },
 ];
+
+export const kCallMethod = ["GSM", "Suara Whatsapp", "Video Whatsapp"];
