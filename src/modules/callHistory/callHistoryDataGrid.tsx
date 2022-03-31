@@ -32,8 +32,18 @@ const columns: GridColDef[] = [
       return date;
     },
   },
-  // { field: "method", headerName: "No Nota", width: 150 },
-  // { field: "method", headerName: "No KBU", width: 150 },
+  {
+    field: "billNumber",
+    headerClassName: columnHeaderClassName,
+    headerName: "No Nota",
+    width: 100,
+  },
+  {
+    field: "boothNumber",
+    headerClassName: columnHeaderClassName,
+    headerName: "No KBU",
+    width: 100,
+  },
   {
     field: "callNumber",
     headerName: "No Tujuan",
@@ -75,7 +85,12 @@ const columns: GridColDef[] = [
   },
 ];
 
-const queryToParams = ({ dateRange, status, method }: CallFilterQuery) => {
+const queryToParams = ({
+  dateRange,
+  status,
+  method,
+  boothNumber,
+}: CallFilterQuery) => {
   const parsedDateRange = parseInt(dateRange ?? "0");
   if (parsedDateRange === -1) {
     // alert("custom filter");
@@ -87,8 +102,7 @@ const queryToParams = ({ dateRange, status, method }: CallFilterQuery) => {
     endedAt,
     status: status ? [status].flat() : undefined,
     method: method ? [method].flat() : undefined,
-    // "method[]": query["method[]"] ? parseInt(query["method[]" : undefined,
-    // boothNumber: query.boothNumber ? parseInt(query.boothNumber) : undefined,
+    boothNumber: boothNumber ? [boothNumber].flat() : undefined,
   };
 
   return newCallFilterParams;

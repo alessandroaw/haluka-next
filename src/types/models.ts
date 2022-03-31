@@ -40,6 +40,8 @@ export type Call = {
   deletedAt: null;
   billId: string;
   callNumber: string;
+  boothNumber?: number;
+  billNumber?: number;
   duration: number | null;
   total: number | null;
   method: number;

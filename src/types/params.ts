@@ -3,5 +3,5 @@ export interface CallFilterParams {
   endedAt?: Date;
   status?: string[];
   method?: string[];
-  boothNumber?: number;
+  boothNumber?: string[];
 }

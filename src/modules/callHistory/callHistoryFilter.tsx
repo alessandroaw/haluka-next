@@ -1,10 +1,13 @@
-import { Box, Link, Stack, Typography } from "@mui/material";
+import React from "react";
+import { Box, CircularProgress, Link, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
 import { FilterChip } from "src/components/chip";
+import { FilterMenu } from "src/components/menu";
 import { CallFilterQuery } from "src/types/query";
 import { kDateFilterItems } from "src/utils/constant";
 import { kCallMethod } from "src/utils/constant";
+import { useUserBooths } from "src/swr-cache/useUserBooths";
+import { GenericErrorAlert } from "src/components/alert";
 
 export const CallHistoryFilter: React.FC = ({}) => {
   return (
@@ -20,6 +23,7 @@ export const CallHistoryFilter: React.FC = ({}) => {
         <Typography variant="title-md">Filter Riwayat Panggilan</Typography>
         <DateFilterChips />
         <Stack direction="row" spacing={4}>
+          <BoothNumberFilter />
           <MethodFilterChips />
           <PaymentStatusFilter />
         </Stack>
@@ -175,6 +179,92 @@ const PaymentStatusFilter: React.FC = () => {
           onClick={handleFilterClick("2")}
         />
       </Stack>
+    </Stack>
+  );
+};
+
+const kBoothNumberFilterItems = ["1", "2", "3", "4", "5", "6", "7"];
+
+const BoothNumberFilter: React.FC = () => {
+  const { push, query } = useRouter();
+  const callQuery = query as CallFilterQuery;
+  // Load user booths to get booth numbers
+  const { booths, loading, error } = useUserBooths();
+
+  const [selectedBoothNumbers, setSelectedBoothNumbers] = React.useState<
+    number[]
+  >([]);
+  const [boothNumbers, setBoothNumbers] = React.useState<number[]>([]);
+
+  const [anchor, setAnchor] = React.useState<null | HTMLElement>(null);
+
+  React.useEffect(() => {
+    if (callQuery.boothNumber) {
+      setSelectedBoothNumbers([callQuery.boothNumber].flat().map(Number));
+    }
+    if (booths) {
+      const newBoothNumbers = booths
+        .map((booth) => booth.boothNumber)
+        .sort((a, b) => a - b);
+      setBoothNumbers(newBoothNumbers);
+    }
+  }, [callQuery.boothNumber, booths]);
+
+  const openFilterMenu = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleFilterChange = (newBoothNumbers: number[]) => {
+    console.log("hello");
+
+    setSelectedBoothNumbers(newBoothNumbers);
+
+    const newQuery: CallFilterQuery = {
+      ...callQuery,
+      boothNumber: newBoothNumbers && newBoothNumbers.map((i) => `${i}`),
+    };
+    console.log({ message: "newQuery", newQuery });
+    push({
+      query: newQuery,
+    });
+  };
+
+  return (
+    <Stack>
+      <Typography variant="title-sm">KBU</Typography>
+      <Stack mt={1} direction="row" spacing={1}>
+        <FilterChip
+          label="No KBU"
+          active={selectedBoothNumbers && selectedBoothNumbers.length > 0}
+          badge={
+            selectedBoothNumbers && selectedBoothNumbers.length > 0
+              ? `${selectedBoothNumbers.length}`
+              : undefined
+          }
+          onClick={openFilterMenu}
+          endIcon={<i className="bx bx-chevron-down" />}
+        />
+      </Stack>
+      <FilterMenu
+        initialSelectedIndices={selectedBoothNumbers.map((i) =>
+          boothNumbers.indexOf(i)
+        )}
+        open={Boolean(anchor)}
+        anchorEl={anchor}
+        loading={loading}
+        error={Boolean(error)}
+        onClose={() => {
+          setAnchor(null);
+        }}
+        onFinish={(indices: number[]) => {
+          const newBoothNumbers = indices.map((i) => boothNumbers[i]);
+          handleFilterChange(newBoothNumbers);
+        }}
+        onReset={() => {
+          handleFilterChange([]);
+        }}
+        list={boothNumbers}
+      />
     </Stack>
   );
 };
