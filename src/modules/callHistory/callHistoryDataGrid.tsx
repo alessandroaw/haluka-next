@@ -18,8 +18,30 @@ import {
   prettyDateTime,
 } from "src/utils/helper";
 import { kCallMethod } from "src/utils/constant";
+import { Call } from "src/types/models";
 
 const columnHeaderClassName = "haluka-datagrid--header";
+interface formatedCalls extends Call {
+  formattedMethod: string;
+  formattedStatus: string;
+  formattedDuration: string;
+}
+
+const formatCalls = (calls: Call[] | undefined): formatedCalls[] => {
+  if (!calls || calls.length === 0) {
+    return [];
+  }
+
+  return calls.map((call) => {
+    return {
+      ...call,
+      formattedMethod: kCallMethod[call.method],
+      formattedStatus: call.status > 2 ? "Lunas" : "Belum Lunas",
+      formattedDuration: calculateCallDuration(call.duration ?? 0),
+      total: call.total ?? 0,
+    };
+  });
+};
 
 const columns: GridColDef[] = [
   {
@@ -51,29 +73,22 @@ const columns: GridColDef[] = [
     headerClassName: columnHeaderClassName,
   },
   {
-    field: "method",
+    field: "formattedMethod",
     headerName: "Metode Panggilan",
     minWidth: 150,
-
     headerClassName: columnHeaderClassName,
-    renderCell: (params: GridRenderCellParams<number>) =>
-      kCallMethod[params.value < 0 ? 0 : params.value],
   },
   {
-    field: "status",
+    field: "formattedStatus",
     headerName: "Status Pembayaran",
     width: 150,
     headerClassName: columnHeaderClassName,
-    renderCell: (params: GridRenderCellParams<number>) =>
-      params.value > 2 ? "Lunas" : "Belum Lunas",
   },
   {
-    field: "duration",
+    field: "formattedDuration",
     headerName: "Durasi",
     minWidth: 100,
     headerClassName: columnHeaderClassName,
-    renderCell: (params: GridRenderCellParams<number>) =>
-      calculateCallDuration(params.value),
   },
   {
     field: "total",
@@ -152,6 +167,7 @@ export const CallHistoryDataGrid: React.FC = ({}) => {
         localeText={{
           toolbarExport: "Unduh riwayat panggilan",
           noRowsLabel: "Tidak ada data",
+          toolbarExportCSV: "Unduh CSV",
           footerRowSelected: (count) => `${count} baris terpilih`,
         }}
         sx={{
@@ -196,7 +212,6 @@ export const CallHistoryDataGrid: React.FC = ({}) => {
                   }}
                   csvOptions={{
                     fileName: `Laporan Panggilan ${new Date().toLocaleDateString()}`,
-                    // fields: ["name", "email", "role"],
                   }}
                   {...props}
                   startIcon={<i className="bx bx-download bx-md" />}
@@ -207,7 +222,7 @@ export const CallHistoryDataGrid: React.FC = ({}) => {
           ),
         }}
         loading={loading || !calls}
-        rows={calls ?? []}
+        rows={formatCalls(calls)}
         columns={columns}
       />
     </Box>
