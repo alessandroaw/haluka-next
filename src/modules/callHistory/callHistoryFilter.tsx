@@ -10,6 +10,16 @@ import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { GenericErrorAlert } from "src/components/alert";
 
 export const CallHistoryFilter: React.FC = ({}) => {
+  const [isSeeMoreClicked, setIsSeeMoreClicked] = React.useState(false);
+  const { query } = useRouter();
+
+  React.useEffect(() => {
+    const { boothNumber, method, status } = query as CallFilterQuery;
+    if (Boolean(boothNumber) || Boolean(method) || Boolean(status)) {
+      setIsSeeMoreClicked(true);
+    }
+  }, [query]);
+
   return (
     <Box
       p={3}
@@ -22,21 +32,23 @@ export const CallHistoryFilter: React.FC = ({}) => {
       <Stack width="100%" alignItems="flex-start" spacing={3}>
         <Typography variant="title-md">Filter Riwayat Panggilan</Typography>
         <DateFilterChips />
-        <Stack direction="row" spacing={4}>
-          <BoothNumberFilter />
-          <MethodFilterChips />
-          <PaymentStatusFilter />
-        </Stack>
+        {isSeeMoreClicked && (
+          <Stack direction="row" spacing={4}>
+            <BoothNumberFilter />
+            <MethodFilterChips />
+            <PaymentStatusFilter />
+          </Stack>
+        )}
         <Link
           variant="label-md"
           underline="hover"
           color="primary.main"
-          onClick={() => console.log("clicked")}
+          onClick={() => setIsSeeMoreClicked(!isSeeMoreClicked)}
           sx={{
             cursor: "pointer",
           }}
         >
-          Lebih banyak filter
+          Lihat lebih {isSeeMoreClicked ? "sedikit" : "banyak"} filter
         </Link>
       </Stack>
     </Box>
