@@ -15,6 +15,7 @@ import { GenericErrorAlert } from "../alert";
 
 interface FilterMenuProps<T> {
   open: boolean;
+  /** List of initial selected index of item inside list */
   initialSelectedIndices?: number[];
   anchorEl: null | HTMLElement;
   list: T[];
@@ -25,6 +26,11 @@ interface FilterMenuProps<T> {
   onReset: (indices: number[]) => void;
 }
 
+/**
+ * This component is used to filter based on list of items.
+ * It is used in the following components:
+ * - CallHistoryFilter
+ */
 export const FilterMenu = <T extends {}>({
   open,
   initialSelectedIndices,

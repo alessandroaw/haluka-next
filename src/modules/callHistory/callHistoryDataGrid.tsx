@@ -111,6 +111,8 @@ const queryToParams = ({
 export const CallHistoryDataGrid: React.FC = ({}) => {
   const { query } = useRouter();
   const { calls, loading, error } = useCalls(queryToParams(query));
+  const [page, setPage] = React.useState(0);
+  const [pageSize, setPageSize] = React.useState(10);
 
   if (error) {
     return <GenericErrorAlert />;
@@ -119,13 +121,38 @@ export const CallHistoryDataGrid: React.FC = ({}) => {
   const toolbarHeight = 44;
   const offset = 24 + toolbarHeight;
 
+  // Create variable to determine the data showed for example "showing 1-10 of 100"
+  const total = calls?.length ?? 0;
+  const start = page * pageSize + 1;
+  const end = Math.min(start + pageSize - 1, total);
+
   return (
     <Box mt={`${offset + 24}px`}>
       <DataGrid
         autoHeight
+        page={page}
+        onPageChange={setPage}
+        pageSize={pageSize}
+        onPageSizeChange={setPageSize}
+        rowsPerPageOptions={[10, 20, 50]}
+        componentsProps={{
+          pagination: {
+            labelRowsPerPage: "Baris per halaman",
+            labelDisplayedRows: ({
+              from,
+              to,
+              count,
+            }: {
+              from: number;
+              to: number;
+              count: number;
+            }) => `${from}-${to} dari ${count}`,
+          },
+        }}
         localeText={{
           toolbarExport: "Unduh riwayat panggilan",
           noRowsLabel: "Tidak ada data",
+          footerRowSelected: (count) => `${count} baris terpilih`,
         }}
         sx={{
           mb: 6,
@@ -153,11 +180,10 @@ export const CallHistoryDataGrid: React.FC = ({}) => {
                   position: "absolute",
                   top: `-${offset}px`,
                   width: "100%",
-                  // transform: "translateY(100%)",
                 }}
               >
                 <Typography variant="body-md">
-                  Menampilkan 1-10 dari total 24 riwayat panggilan
+                  Menampilkan {start}-{end} dari total {total} riwayat panggilan
                 </Typography>
                 <GridToolbarExport
                   color="primary"
