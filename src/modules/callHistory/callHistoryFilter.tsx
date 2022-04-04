@@ -1,13 +1,13 @@
-import React from "react";
-import { Box, CircularProgress, Link, Stack, Typography } from "@mui/material";
+import { Box, Link, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
+import React from "react";
 import { FilterChip } from "src/components/chip";
+import { DateRangeState } from "src/components/dateRange";
 import { FilterMenu } from "src/components/menu";
-import { CallFilterQuery } from "src/types/query";
-import { kDateFilterItems } from "src/utils/constant";
-import { kCallMethod } from "src/utils/constant";
+import { DateRangeMenu } from "src/components/menu/dateRangeMenu";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
-import { GenericErrorAlert } from "src/components/alert";
+import { CallFilterQuery } from "src/types/query";
+import { kCallMethod, kDateFilterItems } from "src/utils/constant";
 
 export const CallHistoryFilter: React.FC = ({}) => {
   const [isSeeMoreClicked, setIsSeeMoreClicked] = React.useState(false);
@@ -58,6 +58,7 @@ export const CallHistoryFilter: React.FC = ({}) => {
 const DateFilterChips: React.FC = () => {
   const { push, query } = useRouter();
   const callQuery = query as CallFilterQuery;
+  const [anchor, setAnchor] = React.useState<null | HTMLElement>(null);
   const [selectedFilterIndex, setSelectedFilterIndex] =
     React.useState<number>(0);
 
@@ -69,6 +70,8 @@ const DateFilterChips: React.FC = () => {
 
   const handleFilterClick = (index: number) => () => {
     setSelectedFilterIndex(index);
+    delete callQuery.startDate;
+    delete callQuery.endDate;
     const newQuery: CallFilterQuery = {
       ...callQuery,
       dateRange: `${index}`,
@@ -76,6 +79,29 @@ const DateFilterChips: React.FC = () => {
     push({
       query: newQuery,
     });
+  };
+
+  const handleDateRangeFilterClick = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    setAnchor(event.currentTarget);
+  };
+
+  const handleDateRangeChange = ({ startDate, endDate }: DateRangeState) => {
+    setSelectedFilterIndex(-1);
+    const newQuery: CallFilterQuery = {
+      ...callQuery,
+      dateRange: `${-1}`,
+      startDate: startDate?.toISOString(),
+      endDate: endDate?.toISOString(),
+    };
+    push({
+      query: newQuery,
+    });
+  };
+
+  const handleClose = () => {
+    setAnchor(null);
   };
 
   return (
@@ -93,10 +119,22 @@ const DateFilterChips: React.FC = () => {
         <FilterChip
           label="Lainnya"
           active={selectedFilterIndex === -1}
-          onClick={handleFilterClick(-1)}
+          onClick={handleDateRangeFilterClick}
           endIcon={<i className="bx bx-chevron-down" />}
         />
       </Stack>
+      <DateRangeMenu
+        open={Boolean(anchor)}
+        anchorEl={anchor}
+        onClose={handleClose}
+        onFinish={handleDateRangeChange}
+        initialValue={{
+          startDate: callQuery.startDate
+            ? new Date(callQuery.startDate)
+            : new Date(),
+          endDate: callQuery.endDate ? new Date(callQuery.endDate) : new Date(),
+        }}
+      />
     </Stack>
   );
 };
@@ -194,8 +232,6 @@ const PaymentStatusFilter: React.FC = () => {
     </Stack>
   );
 };
-
-const kBoothNumberFilterItems = ["1", "2", "3", "4", "5", "6", "7"];
 
 const BoothNumberFilter: React.FC = () => {
   const { push, query } = useRouter();

@@ -1,6 +1,6 @@
 export interface CallFilterParams {
-  startedAt?: Date;
-  endedAt?: Date;
+  startedAt?: string;
+  endedAt?: string;
   status?: string[];
   method?: string[];
   boothNumber?: string[];

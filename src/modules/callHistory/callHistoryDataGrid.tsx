@@ -101,17 +101,23 @@ const columns: GridColDef[] = [
 ];
 
 const queryToParams = ({
+  startDate,
+  endDate,
   dateRange,
   status,
   method,
   boothNumber,
 }: CallFilterQuery) => {
   const parsedDateRange = parseInt(dateRange ?? "0");
-  if (parsedDateRange === -1) {
-    // alert("custom filter");
-    return {};
-  }
-  const { startedAt, endedAt } = kDateFilterItems[parsedDateRange];
+
+  const { startedAt, endedAt } =
+    parsedDateRange === -1
+      ? { startedAt: startDate, endedAt: endDate }
+      : {
+          startedAt: kDateFilterItems[parsedDateRange].startedAt.toISOString(),
+          endedAt: kDateFilterItems[parsedDateRange].endedAt.toISOString(),
+        };
+
   const newCallFilterParams: CallFilterParams = {
     startedAt,
     endedAt,

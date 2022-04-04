@@ -5,5 +5,6 @@ export interface CallFilterQuery extends ParsedUrlQuery {
   boothNumber?: string[];
   method?: string[];
   status?: string[];
-  testing?: string[];
+  startDate?: string;
+  endDate?: string;
 }
