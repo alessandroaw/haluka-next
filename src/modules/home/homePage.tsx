@@ -1,5 +1,12 @@
 import { HalukaLogo } from "src/components/logo";
-import { Box, Container, Grid, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  CircularProgress,
+  Container,
+  Grid,
+  Stack,
+  Typography,
+} from "@mui/material";
 import { NextPage } from "next";
 import Image from "next/image";
 import heroImg from "public/images/svg/login-hero.svg";
@@ -10,7 +17,7 @@ import React from "react";
 import { useRouter } from "next/router";
 
 export const HomePage: NextPage = () => {
-  const { user, loggedOut } = useUser();
+  const { user, loading, loggedOut } = useUser();
   const router = useRouter();
 
   React.useEffect(() => {
@@ -20,6 +27,16 @@ export const HomePage: NextPage = () => {
         : router.replace("/transaction-history");
     }
   }, [user, loggedOut]);
+
+  if (loading) {
+    return (
+      <Container sx={{ height: "100vh" }}>
+        <Stack justifyContent="center" alignItems="center" height="100%">
+          <CircularProgress />
+        </Stack>
+      </Container>
+    );
+  }
 
   return (
     <Box
