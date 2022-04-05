@@ -5,14 +5,30 @@ import { AvatarButton } from "src/components/button/avatarButton";
 import { HalukaLogo } from "src/components/logo";
 import { kBorderColor } from "src/utils/styles";
 
+interface TabItem {
+  label: string;
+  pageName: string;
+}
+
 export const MainAppBar: React.FC = () => {
-  const Navigations: { [key: string]: number } = {
-    "booth-monitoring": 0,
-    "call-history": 1,
+  const navigations: { [key: string]: TabItem[] } = {
+    cashier: [
+      { pageName: "booth-monitoring", label: "Monitoring KBU" },
+      { pageName: "call-history", label: "Riwayat Panggilan" },
+    ],
+    admin: [
+      { pageName: "call-history", label: "Riwayat Panggilan" },
+      { pageName: "settings", label: "Pengaturan" },
+    ],
   };
 
   const router = useRouter();
-  const tabValue = Navigations[router.pathname.split("/")[1]];
+  const pathNameSplit = router.pathname.split("/");
+  const actor = pathNameSplit[1];
+  const pageName = pathNameSplit[2];
+  const tabValue = navigations[actor]?.findIndex(
+    (item) => item.pageName === pageName
+  );
   return (
     <AppBar
       color="inherit"
@@ -41,8 +57,13 @@ export const MainAppBar: React.FC = () => {
               },
             }}
           >
-            <LinkTab href="/booth-monitoring" label="Monitoring KBU" />
-            <LinkTab href="/call-history" label="Riwayat Panggilan" />
+            {navigations[actor]?.map(({ label, pageName }, index) => (
+              <LinkTab
+                href={`/${actor}/${pageName}`}
+                label={label}
+                key={index}
+              />
+            ))}
           </Tabs>
           <AvatarButton anchorHorizontal="right" />
         </Toolbar>

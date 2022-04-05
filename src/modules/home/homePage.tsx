@@ -23,8 +23,8 @@ export const HomePage: NextPage = () => {
   React.useEffect(() => {
     if (user && !loggedOut) {
       user.role === 2
-        ? router.replace("/booth-monitoring")
-        : router.replace("/transaction-history");
+        ? router.replace("/cashier/booth-monitoring")
+        : router.replace("/admin/settings");
     }
   }, [user, loggedOut]);
 
