@@ -1,6 +1,7 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
+import { RoundedButton } from "src/components/button";
 import { FilterChip } from "src/components/chip";
 import { DateRangeState } from "src/components/dateRange";
 import { FilterMenu } from "src/components/menu";
@@ -11,7 +12,7 @@ import { kCallMethod, kDateFilterItems } from "src/utils/constant";
 
 export const CallHistoryFilter: React.FC = ({}) => {
   const [isSeeMoreClicked, setIsSeeMoreClicked] = React.useState(false);
-  const { query } = useRouter();
+  const { push, query } = useRouter();
 
   React.useEffect(() => {
     const { boothNumber, method, status } = query as CallFilterQuery;
@@ -19,6 +20,12 @@ export const CallHistoryFilter: React.FC = ({}) => {
       setIsSeeMoreClicked(true);
     }
   }, [query]);
+
+  const handleResetClick = () => {
+    push({
+      query: {},
+    });
+  };
 
   return (
     <Box
@@ -30,7 +37,19 @@ export const CallHistoryFilter: React.FC = ({}) => {
       }}
     >
       <Stack width="100%" alignItems="flex-start" spacing={3}>
-        <Typography variant="title-md">Filter Riwayat Panggilan</Typography>
+        <Stack width="100%" direction="row" justifyContent="space-between">
+          <Typography variant="title-md">Filter Riwayat Panggilan</Typography>
+          <RoundedButton
+            onClick={handleResetClick}
+            variant="outlined"
+            color="error"
+            sx={{
+              borderColor: "#73777F",
+            }}
+          >
+            Reset filter
+          </RoundedButton>
+        </Stack>
         <DateFilterChips />
         {isSeeMoreClicked && (
           <Stack direction="row" spacing={4}>
@@ -63,9 +82,7 @@ const DateFilterChips: React.FC = () => {
     React.useState<number>(0);
 
   React.useEffect(() => {
-    if (callQuery.dateRange) {
-      setSelectedFilterIndex(parseInt(callQuery.dateRange ?? "0"));
-    }
+    setSelectedFilterIndex(parseInt(callQuery.dateRange ?? "0"));
   }, [callQuery.dateRange]);
 
   const handleFilterClick = (index: number) => () => {
@@ -150,6 +167,8 @@ const MethodFilterChips: React.FC = () => {
   React.useEffect(() => {
     if (callQuery.method) {
       setSelectedFilterIndices([callQuery.method].flat());
+    } else {
+      setSelectedFilterIndices([]);
     }
   }, [callQuery.method]);
 
@@ -196,6 +215,8 @@ const PaymentStatusFilter: React.FC = () => {
   React.useEffect(() => {
     if (callQuery.status) {
       setSelectedFilterIndices([callQuery.status].flat());
+    } else {
+      setSelectedFilterIndices([]);
     }
   }, [callQuery.status]);
 
@@ -249,7 +270,10 @@ const BoothNumberFilter: React.FC = () => {
   React.useEffect(() => {
     if (callQuery.boothNumber) {
       setSelectedBoothNumbers([callQuery.boothNumber].flat().map(Number));
+    } else {
+      setSelectedBoothNumbers([]);
     }
+
     if (booths) {
       const newBoothNumbers = booths
         .map((booth) => booth.boothNumber)
@@ -263,8 +287,6 @@ const BoothNumberFilter: React.FC = () => {
   };
 
   const handleFilterChange = (newBoothNumbers: number[]) => {
-    console.log("hello");
-
     setSelectedBoothNumbers(newBoothNumbers);
 
     const newQuery: CallFilterQuery = {

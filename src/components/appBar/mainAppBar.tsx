@@ -4,6 +4,7 @@ import React from "react";
 import { AvatarButton } from "src/components/button/avatarButton";
 import { HalukaLogo } from "src/components/logo";
 import { kBorderColor } from "src/utils/styles";
+import { HalukaContainer } from "../container";
 
 interface TabItem {
   label: string;
@@ -40,10 +41,7 @@ export const MainAppBar: React.FC = () => {
         borderBottom: `2px solid ${kBorderColor}`,
       }}
     >
-      <Container
-        maxWidth="lg"
-        // sx={{ py: "11.75px" }}
-      >
+      <HalukaContainer>
         <Toolbar disableGutters sx={{ alignItems: "stretch" }}>
           <HalukaLogo />
           <Tabs
@@ -67,7 +65,7 @@ export const MainAppBar: React.FC = () => {
           </Tabs>
           <AvatarButton anchorHorizontal="right" />
         </Toolbar>
-      </Container>
+      </HalukaContainer>
     </AppBar>
   );
 };

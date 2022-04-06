@@ -1,7 +1,6 @@
-import { Box, Container, Typography } from "@mui/material";
 import { NextPage } from "next";
-import React from "react";
 import { MainAppBar } from "src/components/appBar";
+import { HalukaContainer } from "src/components/container";
 import { PageTitle } from "src/components/typography";
 import { CallHistoryDataGrid } from "./callHistoryDataGrid";
 import { CallHistoryFilter } from "./callHistoryFilter";
@@ -10,11 +9,11 @@ export const CallHistoryPage: NextPage = () => {
   return (
     <>
       <MainAppBar />
-      <Container maxWidth="lg" sx={{ position: "relative" }}>
+      <HalukaContainer>
         <PageTitle title="Riwayat Transaksi" />
         <CallHistoryFilter />
         <CallHistoryDataGrid />
-      </Container>
+      </HalukaContainer>
     </>
   );
 };

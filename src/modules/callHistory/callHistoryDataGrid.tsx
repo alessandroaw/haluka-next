@@ -36,7 +36,7 @@ const formatCalls = (calls: Call[] | undefined): formatedCalls[] => {
     return {
       ...call,
       formattedMethod: kCallMethod[call.method],
-      formattedStatus: call.status > 2 ? "Lunas" : "Belum Lunas",
+      formattedStatus: call.status > 2 ? "Lunas" : "Belum dibayar",
       formattedDuration: calculateCallDuration(call.duration ?? 0),
       total: call.total ?? 0,
     };
