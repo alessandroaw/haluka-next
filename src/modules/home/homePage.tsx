@@ -82,7 +82,13 @@ export const Footer: React.FC = () => (
 export const LoginHero: React.FC = () => {
   return (
     <Grid item xs={6}>
-      <Image src={heroImg} width={632} height={346.83} layout="responsive" />
+      <Image
+        src={heroImg}
+        alt="haluka-hero"
+        width={632}
+        height={346.83}
+        layout="responsive"
+      />
     </Grid>
   );
 };

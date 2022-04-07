@@ -1,10 +1,11 @@
-import { AppBar, Container, Tab, Tabs, Toolbar } from "@mui/material";
+import { AppBar, Container, SxProps, Tab, Tabs, Toolbar } from "@mui/material";
 import { useRouter } from "next/router";
 import React from "react";
 import { AvatarButton } from "src/components/button/avatarButton";
 import { HalukaLogo } from "src/components/logo";
 import { kBorderColor } from "src/utils/styles";
 import { HalukaContainer } from "../container";
+import { LinkTab } from "../tabs";
 
 interface TabItem {
   label: string;
@@ -19,7 +20,7 @@ export const MainAppBar: React.FC = () => {
     ],
     admin: [
       { pageName: "call-history", label: "Riwayat Panggilan" },
-      { pageName: "settings", label: "Pengaturan" },
+      { pageName: "settings/accounts", label: "Pengaturan" },
     ],
   };
 
@@ -67,30 +68,5 @@ export const MainAppBar: React.FC = () => {
         </Toolbar>
       </HalukaContainer>
     </AppBar>
-  );
-};
-
-interface LinkTabProps {
-  label: string;
-  href: string;
-}
-
-const LinkTab: React.FC<LinkTabProps> = ({ label, href }) => {
-  const router = useRouter();
-  return (
-    <Tab
-      component="a"
-      color="black"
-      sx={{
-        // height: "100%",
-        // pb: 3,
-        textTransform: "initial",
-      }}
-      onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
-        router.push(`${href}`);
-      }}
-      label={label}
-    />
   );
 };

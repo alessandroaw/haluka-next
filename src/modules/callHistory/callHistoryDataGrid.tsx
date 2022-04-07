@@ -50,7 +50,7 @@ const columns: GridColDef[] = [
     flex: 1,
     headerClassName: columnHeaderClassName,
     renderCell: (params: GridRenderCellParams<Date>) => {
-      const date = prettyDateTime(params.value);
+      const date = prettyDateTime(params.value ?? new Date());
       return date;
     },
   },
@@ -96,7 +96,7 @@ const columns: GridColDef[] = [
     headerClassName: columnHeaderClassName,
     width: 150,
     renderCell: (params: GridRenderCellParams<number>) =>
-      numberToRupiahString(params.value),
+      numberToRupiahString(params.value ?? 0),
   },
 ];
 
