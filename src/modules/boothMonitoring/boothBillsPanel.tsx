@@ -13,6 +13,7 @@ import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
+import { kHalukaContainerPadding } from "src/utils/styles";
 import shallow from "zustand/shallow";
 import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
@@ -48,7 +49,8 @@ export const BoothBillPanels: React.FC = () => {
       direction="row"
       spacing={1.5}
       mt={3}
-      // px={11}
+      ml={kHalukaContainerPadding}
+      mr={1.5}
       alignItems="flex-start"
       pb={3}
       sx={{

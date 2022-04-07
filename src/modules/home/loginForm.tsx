@@ -57,17 +57,17 @@ export const LoginForm: React.FC = () => {
     >
       <Grid item xs={8}>
         <Typography variant="display-md">Selamat datang di Haluka!</Typography>
-        <Paper
+        <Box
           sx={{
             mt: 5,
             py: 3,
             px: 2,
+            bgcolor: "#FDFCFFAB",
             borderRadius: "16px",
           }}
-          elevation={0}
         >
           {loginFormMux()}
-        </Paper>
+        </Box>
       </Grid>
     </Grid>
   );
