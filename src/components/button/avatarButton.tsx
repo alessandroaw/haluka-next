@@ -10,7 +10,7 @@ import React from "react";
 import { useUser } from "src/swr-cache/useUser";
 import { getInitials } from "src/utils/helper";
 import { RoundedButton } from ".";
-import { logout } from "src/repositories/ auth";
+import { logout } from "src/repositories/auth";
 
 export interface AvatarButtonProps {
   anchorHorizontal?: "left" | "right";

@@ -13,7 +13,7 @@ import {
 import { Form, Formik } from "formik";
 import { RoundedButton } from "src/components/button";
 import { kGridSpacingDefault } from "src/utils/styles";
-import { fetchUsersByClientName, login } from "src/repositories/ auth";
+import { fetchUsersByClientName, login } from "src/repositories/auth";
 import { User } from "src/types/models";
 import { mutate } from "swr";
 
@@ -152,12 +152,7 @@ const ClientNameVerificationForm: React.FC<ClientNameVerificationFormProps> = ({
                 </Stack>
               ) : (
                 <>
-                  <RoundedButton
-                    type="submit"
-                    disableElevation
-                    variant="contained"
-                    fullWidth
-                  >
+                  <RoundedButton type="submit" variant="contained" fullWidth>
                     Masuk sebagai kasir
                   </RoundedButton>
                   <RoundedButton
@@ -165,7 +160,6 @@ const ClientNameVerificationForm: React.FC<ClientNameVerificationFormProps> = ({
                       setFieldValue("isAdmin", true);
                       submitForm();
                     }}
-                    disableElevation
                     variant="outlined"
                     fullWidth
                   >
@@ -277,7 +271,6 @@ const LoginFormInput: React.FC<LoginFormInputProps> = ({
               />
               <RoundedButton
                 type="submit"
-                disableElevation
                 loading={isSubmitting}
                 variant="contained"
                 fullWidth

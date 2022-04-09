@@ -305,7 +305,6 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
             onClick={handleBillPayment}
             disabled={billBatch.length > 0}
             variant="contained"
-            disableElevation
           >
             Bayar
           </RoundedButton>

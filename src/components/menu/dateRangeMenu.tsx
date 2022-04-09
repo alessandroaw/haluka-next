@@ -72,11 +72,7 @@ export const DateRangeMenu: React.FC<DateRangeMenuProps> = ({
           <RoundedButton variant="text" onClick={handleReset}>
             Reset
           </RoundedButton>
-          <RoundedButton
-            variant="contained"
-            disableElevation
-            onClick={handleFinish}
-          >
+          <RoundedButton variant="contained" onClick={handleFinish}>
             Lihat hasil
           </RoundedButton>
         </Stack>

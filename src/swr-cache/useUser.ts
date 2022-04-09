@@ -1,5 +1,5 @@
 import useSWR from "swr";
-import { getUserProfile } from "src/repositories/ auth";
+import { getUserProfile } from "src/repositories/auth";
 
 export const useUser = () => {
   const { data, error, mutate } = useSWR("/user/profile", getUserProfile);

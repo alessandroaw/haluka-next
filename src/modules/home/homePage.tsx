@@ -24,7 +24,7 @@ export const HomePage: NextPage = () => {
     if (user && !loggedOut) {
       user.role === 2
         ? router.replace("/cashier/booth-monitoring")
-        : router.replace("/admin/settings");
+        : router.replace("/admin/settings/accounts");
     }
   }, [user, loggedOut]);
 

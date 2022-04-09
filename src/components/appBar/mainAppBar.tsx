@@ -20,7 +20,7 @@ export const MainAppBar: React.FC = () => {
     ],
     admin: [
       { pageName: "call-history", label: "Riwayat Panggilan" },
-      { pageName: "settings/accounts", label: "Pengaturan" },
+      { pageName: "settings", label: "Pengaturan" },
     ],
   };
 
@@ -31,6 +31,7 @@ export const MainAppBar: React.FC = () => {
   const tabValue = navigations[actor]?.findIndex(
     (item) => item.pageName === pageName
   );
+  console.log(pageName);
   return (
     <AppBar
       color="inherit"
@@ -58,7 +59,9 @@ export const MainAppBar: React.FC = () => {
           >
             {navigations[actor]?.map(({ label, pageName }, index) => (
               <LinkTab
-                href={`/${actor}/${pageName}`}
+                href={`/${actor}/${pageName}${
+                  pageName === "settings" ? "/accounts" : ""
+                }`}
                 label={label}
                 key={index}
               />

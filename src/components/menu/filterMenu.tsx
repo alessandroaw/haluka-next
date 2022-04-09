@@ -176,7 +176,6 @@ export const FilterMenu = <T extends {}>({
               <RoundedButton
                 variant="contained"
                 disabled={loading}
-                disableElevation
                 onClick={() => {
                   onFinish(indices);
                   onClose();

@@ -55,3 +55,16 @@ export interface DateFilterItem {
   startedAt: Date;
   endedAt: Date;
 }
+export type Client = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  deletedAt?: Date;
+  name: string;
+  clientName: string;
+  pricePerPeriod: number;
+  chargePeriod: number;
+  freeOfChargeDuration: number;
+  maxWartel: number;
+  maxBooth: number;
+};

@@ -126,7 +126,6 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
           </RoundedButton>
           <RoundedButton
             fullWidth
-            disableElevation
             variant="contained"
             loading={loading}
             color="primary"
