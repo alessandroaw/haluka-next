@@ -1,6 +1,6 @@
-import api from "../utils/apiClient";
 import axios, { AxiosError } from "axios";
 import { User } from "src/types/models";
+import api from "../utils/apiClient";
 
 /// Users API colection
 export const fetchUsersByClientName = async (

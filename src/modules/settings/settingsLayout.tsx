@@ -14,7 +14,7 @@ export const SettingsLayout: React.FC = ({ children }) => {
       <HalukaContainer
         sx={{
           mt: 4,
-          width: "888px",
+          width: "100%",
         }}
       >
         {children}
@@ -22,3 +22,5 @@ export const SettingsLayout: React.FC = ({ children }) => {
     </>
   );
 };
+
+export const kSettingFormMaxWidth = "888px";

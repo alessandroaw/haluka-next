@@ -104,8 +104,24 @@ const DateFilterChips: React.FC = () => {
     setAnchor(event.currentTarget);
   };
 
-  const handleDateRangeChange = ({ startDate, endDate }: DateRangeState) => {
+  const handleDateRangeChange = (newRange: DateRangeState | undefined) => {
+    console.log({ newRange });
+    if (!newRange) {
+      alert("reset");
+      const newQuery: CallFilterQuery = {
+        ...callQuery,
+      };
+      delete newQuery.startDate;
+      delete newQuery.endDate;
+      delete newQuery.dateRange;
+      push({
+        query: newQuery,
+      });
+      return;
+    }
+
     setSelectedFilterIndex(-1);
+    const { startDate, endDate } = newRange;
     const newQuery: CallFilterQuery = {
       ...callQuery,
       dateRange: `${-1}`,
