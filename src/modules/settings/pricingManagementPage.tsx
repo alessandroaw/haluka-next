@@ -1,29 +1,18 @@
-import React from "react";
-import {
-  Avatar,
-  Box,
-  CircularProgress,
-  Dialog,
-  DialogTitle,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik, useFormikContext } from "formik";
+import { Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Formik } from "formik";
 import { NextPage } from "next";
-import { RoundedButton } from "src/components/button";
-import { kBorderColor } from "src/utils/styles";
-import { kSettingFormMaxWidth, SettingsLayout } from "./settingsLayout";
-import { SaveChangeConfirmationDialog } from "./saveChangeConfirmationDialog";
-import { useClient } from "src/swr-cache/useClient";
+import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
-import * as Yup from "yup";
+import { RoundedButton } from "src/components/button";
 import { updateClient } from "src/repositories/clients";
+import { useClient } from "src/swr-cache/useClient";
+import * as Yup from "yup";
+import { SaveChangeConfirmationDialog } from "./saveChangeConfirmationDialog";
+import {
+  kSettingFormMaxWidth,
+  SettingsBorderBox,
+  SettingsLayout,
+} from "./settingsLayout";
 
 const validationSchema = Yup.object({
   freeOfChargeDuration: Yup.number().required("Durasi Tanpa Biaya harus diisi"),
@@ -230,21 +219,5 @@ const PricingFieldSkeleton: React.FC = () => {
         />
       </Stack>
     </Stack>
-  );
-};
-
-const SettingsBorderBox: React.FC = ({ children }) => {
-  return (
-    <Box
-      maxWidth={kSettingFormMaxWidth}
-      sx={{
-        width: "100%",
-        borderRadius: "16px",
-        border: `1px solid rgba(27, 27, 27, 0.12)`,
-        p: [3, 4],
-      }}
-    >
-      {children}
-    </Box>
   );
 };
