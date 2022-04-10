@@ -8,7 +8,10 @@ export const boothBillsKey = (boothId: string) => [
 export const useBoothBills = (id: string) => {
   const { data, error, mutate } = useSWR(
     [`/booths/${id}/bills`, id],
-    (url, id) => getBoothBillsById(id)
+    (url, id) => getBoothBillsById(id),
+    {
+      refreshInterval: 1000,
+    }
   );
 
   const loading = !data && !error;
