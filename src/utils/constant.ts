@@ -1,7 +1,7 @@
 import { DateFilterItem } from "src/types/models";
 import { getNDaysAgo } from "src/utils/helper";
 
-export const BASE_URL = "https://haluka-api.herokuapp.com";
+export const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const kDateFilterItems: DateFilterItem[] = [
   // Hari ini (00:00 - now)
