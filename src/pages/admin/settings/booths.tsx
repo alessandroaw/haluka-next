@@ -1,3 +1,3 @@
-import { PricingManagementPage } from "src/modules/settings/pricingManagementPage";
+import { BoothManagementPage } from "src/modules/settings/boothManagementPage";
 
-export default PricingManagementPage;
+export default BoothManagementPage;

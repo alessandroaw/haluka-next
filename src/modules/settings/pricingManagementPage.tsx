@@ -1,29 +1,24 @@
-import React from "react";
 import {
-  Avatar,
-  Box,
-  CircularProgress,
-  Dialog,
-  DialogTitle,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
+  InputAdornment,
   Skeleton,
   Stack,
   TextField,
   Typography,
 } from "@mui/material";
-import { Formik, useFormikContext } from "formik";
+import { Formik } from "formik";
 import { NextPage } from "next";
-import { RoundedButton } from "src/components/button";
-import { kBorderColor } from "src/utils/styles";
-import { kSettingFormMaxWidth, SettingsLayout } from "./settingsLayout";
-import { SaveChangeConfirmationDialog } from "./saveChangeConfirmationDialog";
-import { useClient } from "src/swr-cache/useClient";
+import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
-import * as Yup from "yup";
+import { RoundedButton } from "src/components/button";
 import { updateClient } from "src/repositories/clients";
+import { useClient } from "src/swr-cache/useClient";
+import * as Yup from "yup";
+import { SaveChangeConfirmationDialog } from "./saveChangeConfirmationDialog";
+import {
+  kSettingFormMaxWidth,
+  SettingsBorderBox,
+  SettingsLayout,
+} from "./settingsLayout";
 
 const validationSchema = Yup.object({
   freeOfChargeDuration: Yup.number().required("Durasi Tanpa Biaya harus diisi"),
@@ -107,6 +102,7 @@ export const PricingManagementPage: NextPage = () => {
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   disabled={isSubmitting}
+                  adornment="Detik"
                   error={
                     touched.freeOfChargeDuration &&
                     Boolean(errors.freeOfChargeDuration)
@@ -123,6 +119,7 @@ export const PricingManagementPage: NextPage = () => {
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   disabled={isSubmitting}
+                  adornment="Detik"
                   error={touched.chargePeriod && Boolean(errors.chargePeriod)}
                   helperText={touched.chargePeriod && errors.chargePeriod}
                 />
@@ -133,6 +130,7 @@ export const PricingManagementPage: NextPage = () => {
                   description="Biaya per periode adalah biaya yang dikenakan kepada penelpon untuk setiap satuan periode waktu perhitungan biaya."
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  adornment="Rp"
                   disabled={isSubmitting}
                   error={
                     touched.pricePerPeriod && Boolean(errors.pricePerPeriod)
@@ -174,6 +172,7 @@ interface PricingFieldProps {
   error?: boolean;
   helperText?: string | false;
   disabled?: boolean;
+  adornment?: "Rp" | "Detik";
 }
 
 const PricingField: React.FC<PricingFieldProps> = ({
@@ -186,7 +185,22 @@ const PricingField: React.FC<PricingFieldProps> = ({
   disabled,
   error,
   helperText,
+  adornment,
 }) => {
+  const getAdornment = () => {
+    if (adornment === "Rp") {
+      return {
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+      };
+    }
+    if (adornment === "Detik") {
+      return {
+        endAdornment: <InputAdornment position="end">Detik</InputAdornment>,
+      };
+    }
+    return undefined;
+  };
+
   return (
     <Stack spacing={3}>
       <Stack>
@@ -205,6 +219,7 @@ const PricingField: React.FC<PricingFieldProps> = ({
         onBlur={handleBlur}
         error={error}
         helperText={helperText}
+        InputProps={getAdornment()}
         sx={{
           maxWidth: "328px",
         }}
@@ -230,21 +245,5 @@ const PricingFieldSkeleton: React.FC = () => {
         />
       </Stack>
     </Stack>
-  );
-};
-
-const SettingsBorderBox: React.FC = ({ children }) => {
-  return (
-    <Box
-      maxWidth={kSettingFormMaxWidth}
-      sx={{
-        width: "100%",
-        borderRadius: "16px",
-        border: `1px solid rgba(27, 27, 27, 0.12)`,
-        p: [3, 4],
-      }}
-    >
-      {children}
-    </Box>
   );
 };
