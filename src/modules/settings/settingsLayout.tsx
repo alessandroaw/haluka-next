@@ -29,6 +29,7 @@ export const kSettingFormMaxWidth = "888px";
 interface SettingsBorderBoxProps {
   maxWidth?: string;
   children?: React.ReactNode;
+  noBorder?: boolean;
   sx?: SxProps;
 }
 
@@ -36,13 +37,14 @@ export const SettingsBorderBox: React.FC<SettingsBorderBoxProps> = ({
   children,
   maxWidth,
   sx,
+  noBorder = false,
 }) => {
   return (
     <Box
       sx={{
         width: "100%",
         borderRadius: "16px",
-        border: `1px solid rgba(27, 27, 27, 0.12)`,
+        border: noBorder ? "unset" : `1px solid rgba(27, 27, 27, 0.12)`,
         p: [3, 4],
         maxWidth: maxWidth || kSettingFormMaxWidth,
         ...sx,
