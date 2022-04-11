@@ -1,4 +1,10 @@
-import { Skeleton, Stack, TextField, Typography } from "@mui/material";
+import {
+  InputAdornment,
+  Skeleton,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { Formik } from "formik";
 import { NextPage } from "next";
 import React from "react";
@@ -96,6 +102,7 @@ export const PricingManagementPage: NextPage = () => {
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   disabled={isSubmitting}
+                  adornment="Detik"
                   error={
                     touched.freeOfChargeDuration &&
                     Boolean(errors.freeOfChargeDuration)
@@ -112,6 +119,7 @@ export const PricingManagementPage: NextPage = () => {
                   handleChange={handleChange}
                   handleBlur={handleBlur}
                   disabled={isSubmitting}
+                  adornment="Detik"
                   error={touched.chargePeriod && Boolean(errors.chargePeriod)}
                   helperText={touched.chargePeriod && errors.chargePeriod}
                 />
@@ -122,6 +130,7 @@ export const PricingManagementPage: NextPage = () => {
                   description="Biaya per periode adalah biaya yang dikenakan kepada penelpon untuk setiap satuan periode waktu perhitungan biaya."
                   handleChange={handleChange}
                   handleBlur={handleBlur}
+                  adornment="Rp"
                   disabled={isSubmitting}
                   error={
                     touched.pricePerPeriod && Boolean(errors.pricePerPeriod)
@@ -163,6 +172,7 @@ interface PricingFieldProps {
   error?: boolean;
   helperText?: string | false;
   disabled?: boolean;
+  adornment?: "Rp" | "Detik";
 }
 
 const PricingField: React.FC<PricingFieldProps> = ({
@@ -175,7 +185,22 @@ const PricingField: React.FC<PricingFieldProps> = ({
   disabled,
   error,
   helperText,
+  adornment,
 }) => {
+  const getAdornment = () => {
+    if (adornment === "Rp") {
+      return {
+        startAdornment: <InputAdornment position="start">Rp</InputAdornment>,
+      };
+    }
+    if (adornment === "Detik") {
+      return {
+        endAdornment: <InputAdornment position="end">Detik</InputAdornment>,
+      };
+    }
+    return undefined;
+  };
+
   return (
     <Stack spacing={3}>
       <Stack>
@@ -194,6 +219,7 @@ const PricingField: React.FC<PricingFieldProps> = ({
         onBlur={handleBlur}
         error={error}
         helperText={helperText}
+        InputProps={getAdornment()}
         sx={{
           maxWidth: "328px",
         }}
