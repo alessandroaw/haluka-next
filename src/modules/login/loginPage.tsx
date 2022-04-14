@@ -16,6 +16,9 @@ import { useUser } from "src/swr-cache/useUser";
 import React from "react";
 import { useRouter } from "next/router";
 import { HalukaContainer } from "src/components/container";
+import { HalukaTitle } from "src/components/head";
+
+const LoginTitle: React.FC = () => <HalukaTitle title="Login" />;
 
 export const LoginPage: NextPage = () => {
   const { user, loading, loggedOut } = useUser();
@@ -32,6 +35,7 @@ export const LoginPage: NextPage = () => {
   if (loading) {
     return (
       <Container sx={{ height: "100vh" }}>
+        <LoginTitle />
         <Stack justifyContent="center" alignItems="center" height="100%">
           <CircularProgress />
         </Stack>
@@ -57,6 +61,7 @@ export const LoginPage: NextPage = () => {
           pt: 4,
         }}
       >
+        <LoginTitle />
         <HalukaLogo />
       </HalukaContainer>
       <Container>
