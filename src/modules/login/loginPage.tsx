@@ -15,8 +15,9 @@ import { LoginForm } from "./loginForm";
 import { useUser } from "src/swr-cache/useUser";
 import React from "react";
 import { useRouter } from "next/router";
+import { HalukaContainer } from "src/components/container";
 
-export const HomePage: NextPage = () => {
+export const LoginPage: NextPage = () => {
   const { user, loading, loggedOut } = useUser();
   const router = useRouter();
 
@@ -39,7 +40,8 @@ export const HomePage: NextPage = () => {
   }
 
   return (
-    <Box
+    <Stack
+      justifyContent="space-between"
       sx={{
         backgroundImage: `url(images/png/login-bg.png)`,
         backgroundSize: "cover",
@@ -49,23 +51,24 @@ export const HomePage: NextPage = () => {
         height: "100vh",
       }}
     >
-      <Container
-        maxWidth="lg"
+      <HalukaContainer
+        // maxWidth="lg"
         sx={{
-          height: "100%",
           pt: 4,
         }}
       >
-        <Stack height="100%" justifyContent="space-between">
-          <HalukaLogo />
-          <Grid container spacing={kGridSpacingDefault} alignItems="center">
-            <LoginHero />
-            <LoginForm />
-          </Grid>
-          <Footer />
-        </Stack>
+        <HalukaLogo />
+      </HalukaContainer>
+      <Container>
+        <Grid container spacing={kGridSpacingDefault} alignItems="center">
+          <LoginHero />
+          <LoginForm />
+        </Grid>
       </Container>
-    </Box>
+      <HalukaContainer>
+        <Footer />
+      </HalukaContainer>
+    </Stack>
   );
 };
 
