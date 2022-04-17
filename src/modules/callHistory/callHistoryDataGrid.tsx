@@ -35,7 +35,7 @@ const formatCalls = (calls: Call[] | undefined): formatedCalls[] => {
   return calls.map((call) => {
     return {
       ...call,
-      formattedMethod: kCallMethod[call.method],
+      formattedMethod: kCallMethod[call.method - 1],
       formattedStatus: call.status > 2 ? "Lunas" : "Belum dibayar",
       formattedDuration: calculateCallDuration(call.duration ?? 0),
       total: call.total ?? 0,

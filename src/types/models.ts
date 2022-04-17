@@ -68,4 +68,5 @@ export type Client = {
   freeOfChargeDuration: number;
   maxWartel: number;
   maxBooth: number;
+  currentBoothCount: number;
 };

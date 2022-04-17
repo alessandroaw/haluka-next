@@ -1,14 +1,18 @@
-import { Box, CircularProgress, Stack, Typography } from "@mui/material";
-import { NextPage } from "next";
+import {
+  Box,
+  CircularProgress,
+  Skeleton,
+  Stack,
+  Typography,
+} from "@mui/material";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
-import { Button, RoundedButton } from "src/components/button";
-import { useClient } from "src/swr-cache/useClient";
+import { Button } from "src/components/button";
 import { useUserBoothsById } from "src/swr-cache/useUserBoothsById";
 import { useUserList } from "src/swr-cache/useUserList";
 import { User } from "src/types/models";
 import { kCustomContainerLight } from "src/utils/styles";
-import { SettingsBorderBox, SettingsLayout } from "./settingsLayout";
+import { SettingsBorderBox } from "./settingsLayout";
 
 export const WartelSettingsList: React.FC = () => {
   return (
@@ -22,7 +26,19 @@ export const WartelBoothsSettings: React.FC = () => {
   const { users, loading, error } = useUserList();
 
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Stack spacing={4} mb={5}>
+        {Array.from(Array(3).keys()).map((_, index) => (
+          <React.Fragment key={index}>
+            <Stack width="100%" direction="row" justifyContent="space-between">
+              <Skeleton width="30%" />
+              <Skeleton variant="rectangular" height={30} width="20%" />
+            </Stack>
+            <Stack direction="row" spacing={2}></Stack>
+          </React.Fragment>
+        ))}
+      </Stack>
+    );
   }
 
   if (error || !users) {
@@ -128,7 +144,28 @@ const BoothBoxList: React.FC<BoothBoxListProps> = ({ userId }) => {
   const { booths, loading, error } = useUserBoothsById(userId);
 
   if (loading) {
-    return <CircularProgress />;
+    return (
+      <Box
+        width="100%"
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+        }}
+      >
+        {Array.from(Array(5).keys()).map((_, index) => (
+          <Skeleton
+            variant="rectangular"
+            key={index}
+            width={96}
+            height={88}
+            sx={{
+              mr: 1.5,
+              mb: 2,
+            }}
+          />
+        ))}
+      </Box>
+    );
   }
 
   if (error || !booths) {
@@ -150,13 +187,6 @@ const BoothBoxList: React.FC<BoothBoxListProps> = ({ userId }) => {
           isActive={Boolean(booth.activeSession) && booth.activeSession !== ""}
         />
       ))}
-      {/* {booths.map((booth) => (
-        <BoothBox
-          key={booth.id}
-          boothNumber={booth.boothNumber}
-          isActive={Boolean(booth.activeSession) && booth.activeSession !== ""}
-        />
-      ))} */}
     </Box>
   );
 };

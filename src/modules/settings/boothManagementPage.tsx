@@ -41,15 +41,17 @@ export const WartelQuotaSummary: React.FC = () => {
     );
   }
 
+  const { currentBoothCount, maxBooth } = client;
+
   return (
     <SettingsBorderBox>
       <Stack>
         <Typography variant="headline-md" gutterBottom>
-          6 KBU tersisa
+          {maxBooth - currentBoothCount} KBU tersisa
         </Typography>
         <Typography variant="body-md">
-          Anda memiliki kuota total sebanyak {client?.maxBooth} KBU. Anda telah
-          menggunakan 14 KBU.
+          Anda memiliki kuota total sebanyak {maxBooth} KBU. Anda telah
+          menggunakan {currentBoothCount} KBU.
         </Typography>
       </Stack>
     </SettingsBorderBox>
