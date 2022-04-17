@@ -17,6 +17,9 @@ export const fetchUsersByClientName = async (
   }
 };
 
+export const fetchUserList = async (): Promise<User[]> =>
+  fetchUsersByClientName("assalam");
+
 export const login = async (id: string, password: string): Promise<User> => {
   try {
     const res = await api.post<User>(`users/wartel-login`, { id, password });

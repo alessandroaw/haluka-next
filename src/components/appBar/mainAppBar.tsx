@@ -31,7 +31,7 @@ export const MainAppBar: React.FC = () => {
   const tabValue = navigations[actor]?.findIndex(
     (item) => item.pageName === pageName
   );
-  console.log(pageName);
+
   return (
     <AppBar
       color="inherit"

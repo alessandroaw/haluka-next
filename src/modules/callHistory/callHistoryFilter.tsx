@@ -105,7 +105,6 @@ const DateFilterChips: React.FC = () => {
   };
 
   const handleDateRangeChange = (newRange: DateRangeState | undefined) => {
-    console.log({ newRange });
     if (!newRange) {
       alert("reset");
       const newQuery: CallFilterQuery = {
@@ -309,7 +308,7 @@ const BoothNumberFilter: React.FC = () => {
       ...callQuery,
       boothNumber: newBoothNumbers && newBoothNumbers.map((i) => `${i}`),
     };
-    console.log({ message: "newQuery", newQuery });
+
     push({
       query: newQuery,
     });

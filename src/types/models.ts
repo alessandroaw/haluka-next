@@ -6,6 +6,7 @@ export type User = {
   clientId: string;
   name: string;
   role: number;
+  lastBoothNumber?: number;
 };
 
 export type Booth = {
