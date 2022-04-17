@@ -151,10 +151,9 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
           direction="row"
           justifyContent="center"
           spacing={
-            (selected ||
-              (!selected && indicators.pending) ||
-              (!selected && indicators.active)) &&
-            !(!selected && indicators.active && indicators.pending)
+            selected ||
+            (indicators.pending && !indicators.active) ||
+            (!indicators.pending && indicators.active)
               ? 0
               : 0.5
           }

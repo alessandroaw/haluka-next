@@ -25,3 +25,15 @@ export const getBoothBillsById = async (id: string): Promise<Bill[]> => {
     throw error;
   }
 };
+
+export const getBoothsByUserId = async (id: string): Promise<Booth[]> => {
+  try {
+    const res = await api.get<Booth[]>(`users/${id}/booths`);
+    return res.data;
+  } catch (error: any | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      throw error.response;
+    }
+    throw error;
+  }
+};
