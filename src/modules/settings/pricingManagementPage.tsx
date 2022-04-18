@@ -12,6 +12,7 @@ import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
 import { SnackBarAlert } from "src/components/snackbar";
 import { updateClient } from "src/repositories/clients";
+import { useSnackBarControl } from "src/shared-hooks/useSnackbarControl";
 import { useClient } from "src/swr-cache/useClient";
 import * as Yup from "yup";
 import { SaveChangeConfirmationDialog } from "./saveChangeConfirmationDialog";
@@ -32,11 +33,8 @@ const validationSchema = Yup.object({
 export const PricingManagementPage: NextPage = () => {
   const { client, loading, mutate, error } = useClient();
   const [open, setOpen] = React.useState(false);
-  const [sbOpen, setSbOpen] = React.useState(false);
-  const [sbMessage, setSbMessage] = React.useState("");
-  const [sbVariant, setSbVariant] = React.useState<"success" | "error">(
-    "success"
-  );
+  const { sbOpen, sbMessage, sbSeverity, handleSbClose, handleSbOpen } =
+    useSnackBarControl({});
 
   if (loading) {
     return (
@@ -75,13 +73,9 @@ export const PricingManagementPage: NextPage = () => {
           try {
             await updateClient(values);
             mutate({ ...client, ...values });
-            setSbVariant("success");
-            setSbMessage(`Berhasil menyimpan perubahan`);
-            setSbOpen(true);
+            handleSbOpen("info", `Berhasil menyimpan perubahan`);
           } catch (error) {
-            setSbVariant("error");
-            setSbMessage(`Terjadi kesalahan saat menyimpan perubahan`);
-            setSbOpen(true);
+            handleSbOpen("error", `Terjadi kesalahan saat menyimpan perubahan`);
           } finally {
             setSubmitting(false);
           }
@@ -107,8 +101,8 @@ export const PricingManagementPage: NextPage = () => {
               <SnackBarAlert
                 open={sbOpen}
                 message={sbMessage}
-                severity={sbVariant}
-                onClose={() => setSbOpen(false)}
+                severity={sbSeverity}
+                onClose={handleSbClose}
               />
               <Stack spacing={3}>
                 <PricingField
