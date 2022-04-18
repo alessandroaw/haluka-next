@@ -19,7 +19,7 @@ export const AccountManagementPage: NextPage = () => {
         </Box>
         <Stack justifyContent="center" alignItems="center">
           <Typography variant="title-lg" color="textPrimary">
-            Halaman sedang dalam pengembangan.
+            Halaman sedang dalam pengembangan
           </Typography>
         </Stack>
       </SettingsBorderBox>
