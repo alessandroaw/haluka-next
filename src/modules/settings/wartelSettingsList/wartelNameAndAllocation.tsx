@@ -1,10 +1,16 @@
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import React from "react";
 import { Button } from "src/components/button";
+import { SimpleImageDialog } from "src/components/dialog";
 import { SnackBarAlert } from "src/components/snackbar";
 import { allocateBooth, deallocateBooth } from "src/repositories/booths";
-import { clientKey, useClient } from "src/swr-cache/useClient";
-import { userBoothsByIdKeys } from "src/swr-cache/useUserBoothsById";
+import { useSnackBarControl } from "src/shared-hooks/useSnackbarControl";
+import { useClient } from "src/swr-cache/useClient";
+import {
+  userBoothsByIdKeys,
+  useUserBoothsById,
+} from "src/swr-cache/useUserBoothsById";
+import deactivateBoothImg from "public/images/png/deactivate-booth.png";
 import { userListKey } from "src/swr-cache/useUserList";
 import { Booth, Client, User } from "src/types/models";
 import { mutate } from "swr";
@@ -16,13 +22,15 @@ interface WartelNameAndAllocationProps {
 export const WartelNameAndAllocation: React.FC<
   WartelNameAndAllocationProps
 > = ({ wartel }) => {
+  // Remote Cache
   const { client, mutate: mutateClient } = useClient();
+  const { booths, mutate: mutateBoothList } = useUserBoothsById(wartel.id);
+
+  // UI State
   const [loading, setLoading] = React.useState(false);
-  const [sbOpen, setSbOpen] = React.useState(false);
-  const [sbMessage, setSbMessage] = React.useState("");
-  const [sbVariant, setSbVariant] = React.useState<"success" | "error">(
-    "success"
-  );
+  const [dialogOpen, setDialogOpen] = React.useState(false);
+  const { sbOpen, sbMessage, sbSeverity, handleSbClose, handleSbOpen } =
+    useSnackBarControl({});
 
   const fullMutation = (
     allocate: boolean,
@@ -37,9 +45,10 @@ export const WartelNameAndAllocation: React.FC<
     userListMutation(allocate);
 
     // Show success snackbar
-    setSbVariant("success");
-    setSbMessage(`KBU berhasil ${allocate ? "ditambahkan" : "dihapus"}`);
-    setSbOpen(true);
+    handleSbOpen(
+      "info",
+      `KBU berhasil ${allocate ? "ditambahkan" : "dihapus"}`
+    );
   };
 
   const clientMutation = (allocate: boolean) => {
@@ -92,11 +101,18 @@ export const WartelNameAndAllocation: React.FC<
       const createdBooth = await allocateBooth(wartel.id);
       fullMutation(true, createdBooth);
     } catch (e) {
-      setSbVariant("error");
-      setSbMessage("Terjadi kesalahan saat mengalokasikan KBU");
-      setSbOpen(true);
+      handleSbOpen("error", "Terjadi kesalahan saat mengalokasikan KBU");
     }
     setLoading(false);
+  };
+
+  const handleDeallocationControl = () => {
+    if (!booths) return;
+
+    if (Boolean(booths[booths.length - 1].activeSession)) {
+      return setDialogOpen(true);
+    }
+    handleDeallocation();
   };
 
   const handleDeallocation = async () => {
@@ -105,11 +121,14 @@ export const WartelNameAndAllocation: React.FC<
       await deallocateBooth(wartel.id);
       fullMutation(false);
     } catch (e) {
-      setSbVariant("error");
-      setSbMessage("Terjadi kesalahan saat menghapus KBU");
-      setSbOpen(true);
+      handleSbOpen("error", "Terjadi kesalahan saat menghapus KBU");
     }
     setLoading(false);
+  };
+
+  const isMinAllocation = () => {
+    if (!booths) return true;
+    return booths.length <= 0;
   };
 
   const isMaxAllocation = () => {
@@ -122,8 +141,24 @@ export const WartelNameAndAllocation: React.FC<
       <SnackBarAlert
         open={sbOpen}
         message={sbMessage}
-        severity={sbVariant}
-        onClose={() => setSbOpen(false)}
+        severity={sbSeverity}
+        onClose={handleSbClose}
+      />
+      <SimpleImageDialog
+        open={dialogOpen}
+        onClose={() => setDialogOpen(false)}
+        image={deactivateBoothImg}
+        loading={loading}
+        title="Menonaktifkan KBU"
+        message={`Pengurangan jumlah KBU pada ${
+          wartel.name
+        } akan menonaktifkan KBU terakhir pada ${
+          wartel.name
+        } terlebih dahulu. Apakah Anda yakin ingin menonaktifkan KBU nomor ${
+          booths ? booths.length : "-"
+        } dari ${wartel.name}?`}
+        onConfirm={handleDeallocation}
+        confirmButtonText="Nonaktifkan KBU"
       />
       <Stack direction="row" alignItems="center" spacing={1}>
         <Typography variant="title-lg">{wartel.name}</Typography>
@@ -145,8 +180,8 @@ export const WartelNameAndAllocation: React.FC<
               fontSize: "1.8rem",
             },
           }}
-          disabled={loading}
-          onClick={handleDeallocation}
+          disabled={loading || isMinAllocation()}
+          onClick={handleDeallocationControl}
         >
           <i className="bx bx-minus bx-large" />
         </Button>

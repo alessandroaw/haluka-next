@@ -116,7 +116,7 @@ export const BoothBox: React.FC<BoothBoxProps> = ({
         image={deactivateBoothImg}
         loading={loading}
         title="Menonaktifkan KBU"
-        message={`Apakah Anda yakin ingin menonaktifkan KBU nomor ${boothNumber} dari Wartel Putra?`}
+        message={`Apakah Anda yakin ingin menonaktifkan KBU nomor ${boothNumber}?`}
         onConfirm={handleConfirm}
         confirmButtonText="Nonaktifkan KBU"
       />
