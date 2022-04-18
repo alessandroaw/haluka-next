@@ -125,7 +125,7 @@ const queryToParams = ({
     status: status ? [status].flat() : undefined,
     method: method ? [method].flat() : undefined,
     boothNumber: boothNumber ? [boothNumber].flat() : undefined,
-    wartelId: wartelId,
+    userId: wartelId,
   };
 
   return newCallFilterParams;

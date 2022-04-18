@@ -13,7 +13,11 @@ import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
 import { Bill, Booth, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
-import { kHalukaContainerPadding } from "src/utils/styles";
+import {
+  kErrorLightAlt,
+  kHalukaContainerPadding,
+  kSuccessLightAlt,
+} from "src/utils/styles";
 import shallow from "zustand/shallow";
 import { PaymentConfirmationDialog } from "./paymentConfirmationDialog";
 import { isBillInBatch, useBatchPayment } from "./useBatchPayment";
@@ -333,8 +337,7 @@ const CallBox: React.FC<CallBoxProps> = ({ call }) => {
         px: 1.5,
         py: "11px",
         borderRadius: "12px",
-        backgroundColor: (theme) =>
-          theme.palette[call.status === 1 ? "success" : "error"].light,
+        backgroundColor: call.status === 1 ? kSuccessLightAlt : kErrorLightAlt,
         "i.phone-down": {
           transform: "rotate(135deg)",
         },

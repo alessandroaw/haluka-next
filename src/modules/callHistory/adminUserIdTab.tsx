@@ -28,7 +28,7 @@ export const AdminUserIdTab: React.FC = () => {
         } else {
           const newQuery = {
             ...callQuery,
-            wartelId: users[0].id,
+            wartelId: users.filter((u) => u.role === 2)[0].id,
           };
           push({
             query: newQuery,
