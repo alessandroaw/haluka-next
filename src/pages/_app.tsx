@@ -17,7 +17,7 @@ import { useRouter } from "next/router";
 const clientSideEmotionCache = createEmotionCache();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const { loggedOut, loading } = useUser();
+  const { user, loggedOut, loading } = useUser();
   const router = useRouter();
 
   if (pageProps.protected) {
@@ -29,7 +29,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           </Stack>
         </Container>
       );
-    } else if (loggedOut) {
+    } else if (loggedOut || (pageProps.role && pageProps.role !== user?.role)) {
       router.replace("/");
     }
   }

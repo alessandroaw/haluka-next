@@ -1,12 +1,4 @@
-import { GetStaticProps } from "next";
 import { CallHistoryAdminPage } from "src/modules/callHistory/callHistoryAdminPage";
-
-export const getStaticProps: GetStaticProps = async (context) => {
-  return {
-    props: {
-      protected: true,
-    },
-  };
-};
+export { getStaticAdminProtectedProp as getStaticProps } from "src/utils/staticProps";
 
 export default CallHistoryAdminPage;
