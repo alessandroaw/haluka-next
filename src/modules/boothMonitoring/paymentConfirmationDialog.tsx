@@ -15,6 +15,7 @@ import { payBill } from "src/repositories/bills";
 import { boothBillsKey } from "src/swr-cache/useBoothBills";
 import { Bill, Call } from "src/types/models";
 import { calculateCallDuration, numberToRupiahString } from "src/utils/helper";
+import { kErrorLightAlt } from "src/utils/styles";
 import { mutate } from "swr";
 import { useBatchPayment } from "./useBatchPayment";
 interface PaymentConfirmationDialogProps {
@@ -178,7 +179,7 @@ const CallDetailItem: React.FC<CallDetailItemProps> = ({ call }) => {
         sx={{
           display: "flex",
           borderRadius: "50%",
-          bgcolor: (theme) => theme.palette.error.light,
+          bgcolor: kErrorLightAlt,
           p: "4px",
           i: {
             transform: "rotate(135deg)",

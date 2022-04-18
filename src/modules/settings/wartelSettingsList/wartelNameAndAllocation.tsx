@@ -1,6 +1,7 @@
 import { CircularProgress, Stack, Typography } from "@mui/material";
 import React from "react";
 import { Button } from "src/components/button";
+import { SnackBarAlert } from "src/components/snackbar";
 import { allocateBooth, deallocateBooth } from "src/repositories/booths";
 import { clientKey, useClient } from "src/swr-cache/useClient";
 import { userBoothsByIdKeys } from "src/swr-cache/useUserBoothsById";
@@ -17,6 +18,11 @@ export const WartelNameAndAllocation: React.FC<
 > = ({ wartel }) => {
   const { client, mutate: mutateClient } = useClient();
   const [loading, setLoading] = React.useState(false);
+  const [sbOpen, setSbOpen] = React.useState(false);
+  const [sbMessage, setSbMessage] = React.useState("");
+  const [sbVariant, setSbVariant] = React.useState<"success" | "error">(
+    "success"
+  );
 
   const fullMutation = (
     allocate: boolean,
@@ -25,9 +31,15 @@ export const WartelNameAndAllocation: React.FC<
     if (allocate && !createdBooth)
       throw new Error("createdBooth cannot undefined in allocation");
 
+    // Mutate all swr cache
     clientMutation(allocate);
     userBoothMutation(allocate, createdBooth);
     userListMutation(allocate);
+
+    // Show success snackbar
+    setSbVariant("success");
+    setSbMessage(`KBU berhasil ${allocate ? "ditambahkan" : "dihapus"}`);
+    setSbOpen(true);
   };
 
   const clientMutation = (allocate: boolean) => {
@@ -80,7 +92,9 @@ export const WartelNameAndAllocation: React.FC<
       const createdBooth = await allocateBooth(wartel.id);
       fullMutation(true, createdBooth);
     } catch (e) {
-      alert("kesalahan");
+      setSbVariant("error");
+      setSbMessage("Terjadi kesalahan saat mengalokasikan KBU");
+      setSbOpen(true);
     }
     setLoading(false);
   };
@@ -91,7 +105,9 @@ export const WartelNameAndAllocation: React.FC<
       await deallocateBooth(wartel.id);
       fullMutation(false);
     } catch (e) {
-      alert("kesalahan");
+      setSbVariant("error");
+      setSbMessage("Terjadi kesalahan saat menghapus KBU");
+      setSbOpen(true);
     }
     setLoading(false);
   };
@@ -103,6 +119,12 @@ export const WartelNameAndAllocation: React.FC<
 
   return (
     <Stack direction="row" justifyContent="space-between">
+      <SnackBarAlert
+        open={sbOpen}
+        message={sbMessage}
+        severity={sbVariant}
+        onClose={() => setSbOpen(false)}
+      />
       <Stack direction="row" alignItems="center" spacing={1}>
         <Typography variant="title-lg">{wartel.name}</Typography>
         {loading && <CircularProgress size="25px" />}
