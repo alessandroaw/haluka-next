@@ -35,7 +35,7 @@ const formatCalls = (calls: Call[] | undefined): formatedCalls[] => {
   return calls.map((call) => {
     return {
       ...call,
-      formattedMethod: kCallMethod[call.method],
+      formattedMethod: kCallMethod[call.method - 1],
       formattedStatus: call.status > 2 ? "Lunas" : "Belum dibayar",
       formattedDuration: calculateCallDuration(call.duration ?? 0),
       total: call.total ?? 0,
@@ -107,6 +107,7 @@ const queryToParams = ({
   status,
   method,
   boothNumber,
+  wartelId,
 }: CallFilterQuery) => {
   const parsedDateRange = parseInt(dateRange ?? "0");
 
@@ -124,6 +125,7 @@ const queryToParams = ({
     status: status ? [status].flat() : undefined,
     method: method ? [method].flat() : undefined,
     boothNumber: boothNumber ? [boothNumber].flat() : undefined,
+    wartelId: wartelId,
   };
 
   return newCallFilterParams;

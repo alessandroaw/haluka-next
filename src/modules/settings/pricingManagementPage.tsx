@@ -10,7 +10,9 @@ import { NextPage } from "next";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
+import { SnackBarAlert } from "src/components/snackbar";
 import { updateClient } from "src/repositories/clients";
+import { useSnackBarControl } from "src/shared-hooks/useSnackbarControl";
 import { useClient } from "src/swr-cache/useClient";
 import * as Yup from "yup";
 import { SaveChangeConfirmationDialog } from "./saveChangeConfirmationDialog";
@@ -31,6 +33,8 @@ const validationSchema = Yup.object({
 export const PricingManagementPage: NextPage = () => {
   const { client, loading, mutate, error } = useClient();
   const [open, setOpen] = React.useState(false);
+  const { sbOpen, sbMessage, sbSeverity, handleSbClose, handleSbOpen } =
+    useSnackBarControl({});
 
   if (loading) {
     return (
@@ -69,8 +73,9 @@ export const PricingManagementPage: NextPage = () => {
           try {
             await updateClient(values);
             mutate({ ...client, ...values });
+            handleSbOpen("info", `Berhasil menyimpan perubahan`);
           } catch (error) {
-            alert(error);
+            handleSbOpen("error", `Terjadi kesalahan saat menyimpan perubahan`);
           } finally {
             setSubmitting(false);
           }
@@ -93,6 +98,12 @@ export const PricingManagementPage: NextPage = () => {
             alignItems="flex-end"
           >
             <SettingsBorderBox>
+              <SnackBarAlert
+                open={sbOpen}
+                message={sbMessage}
+                severity={sbSeverity}
+                onClose={handleSbClose}
+              />
               <Stack spacing={3}>
                 <PricingField
                   value={values.freeOfChargeDuration}
@@ -153,6 +164,7 @@ export const PricingManagementPage: NextPage = () => {
             <SaveChangeConfirmationDialog
               open={open}
               onClose={() => setOpen(false)}
+              loading={isSubmitting}
               onConfirm={() => submitForm()}
             />
           </Stack>

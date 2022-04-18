@@ -6,6 +6,7 @@ export type User = {
   clientId: string;
   name: string;
   role: number;
+  lastBoothNumber?: number;
 };
 
 export type Booth = {
@@ -67,4 +68,5 @@ export type Client = {
   freeOfChargeDuration: number;
   maxWartel: number;
   maxBooth: number;
+  currentBoothCount: number;
 };

@@ -4,4 +4,5 @@ export interface CallFilterParams {
   status?: string[];
   method?: string[];
   boothNumber?: string[];
+  wartelId?: string;
 }

@@ -25,3 +25,52 @@ export const getBoothBillsById = async (id: string): Promise<Bill[]> => {
     throw error;
   }
 };
+
+export const getBoothsByUserId = async (id: string): Promise<Booth[]> => {
+  try {
+    const res = await api.get<Booth[]>(`users/${id}/booths`);
+    return res.data;
+  } catch (error: any | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      throw error.response;
+    }
+    throw error;
+  }
+};
+
+export const deactivateBooth = async (boothId: string): Promise<Booth> => {
+  try {
+    const res = await api.patch<Booth>(`/booths/${boothId}/deactivation`);
+    return res.data;
+  } catch (error: any | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      throw error.response;
+    }
+    throw error;
+  }
+};
+
+export const allocateBooth = async (userId: string): Promise<Booth> => {
+  try {
+    const res = await api.post<Booth>(`users/booth-allocation`, {
+      userId,
+    });
+    return res.data;
+  } catch (error: any | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      throw error.response;
+    }
+    throw error;
+  }
+};
+export const deallocateBooth = async (userId: string): Promise<void> => {
+  try {
+    const res = await api.delete<void>(`users/${userId}/booth-deallocation`);
+    return;
+  } catch (error: any | AxiosError) {
+    if (axios.isAxiosError(error)) {
+      throw error.response;
+    }
+    throw error;
+  }
+};

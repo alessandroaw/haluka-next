@@ -28,7 +28,6 @@ class MyDocument extends Document {
             href="https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css"
             rel="stylesheet"
           />
-          <title>Haluka</title>
         </Head>
         <body>
           <Main />

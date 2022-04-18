@@ -7,4 +7,5 @@ export interface CallFilterQuery extends ParsedUrlQuery {
   status?: string[];
   startDate?: string;
   endDate?: string;
+  wartelId?: string;
 }

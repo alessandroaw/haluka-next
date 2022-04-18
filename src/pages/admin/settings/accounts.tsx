@@ -1,3 +1,3 @@
-import { PricingManagementPage } from "src/modules/settings/pricingManagementPage";
+import { AccountManagementPage } from "src/modules/settings/accountManagementPage";
 
-export default PricingManagementPage;
+export default AccountManagementPage;
