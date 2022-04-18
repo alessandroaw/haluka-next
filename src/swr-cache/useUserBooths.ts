@@ -1,6 +1,8 @@
 import { getUserBooths } from "src/repositories/booths";
 import useSWR from "swr";
 
+export const userBoothsKey = `/users/booths`;
+
 export const useUserBooths = () => {
   const { data, error, mutate } = useSWR("/user/booths", getUserBooths);
 

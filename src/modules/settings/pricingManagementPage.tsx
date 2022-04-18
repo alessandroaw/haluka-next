@@ -153,6 +153,7 @@ export const PricingManagementPage: NextPage = () => {
             <SaveChangeConfirmationDialog
               open={open}
               onClose={() => setOpen(false)}
+              loading={isSubmitting}
               onConfirm={() => submitForm()}
             />
           </Stack>
