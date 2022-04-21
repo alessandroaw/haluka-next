@@ -1,13 +1,7 @@
+import { Skeleton, Stack } from "@mui/material";
 import React from "react";
-import { CircularProgress, Skeleton, Stack, Typography } from "@mui/material";
 import { GenericErrorAlert } from "src/components/alert";
-import { Button } from "src/components/button";
-import { allocateBooth, deallocateBooth } from "src/repositories/booths";
-import { clientKey } from "src/swr-cache/useClient";
-import { userBoothsByIdKeys } from "src/swr-cache/useUserBoothsById";
-import { userListKey, useUserList } from "src/swr-cache/useUserList";
-import { Booth, Client, User } from "src/types/models";
-import { mutate } from "swr";
+import { useUserList } from "src/swr-cache/useUserList";
 import { SettingsBorderBox } from "../settingsLayout";
 import { BoothBoxList } from "./boothBoxList";
 import { WartelNameAndAllocation } from "./wartelNameAndAllocation";

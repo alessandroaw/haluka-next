@@ -1,15 +1,14 @@
 import { getBoothsByUserId, getUserBooths } from "src/repositories/booths";
 import useSWR from "swr";
 
-export const userBoothsByIdKeys = (userId: string) => [
-  `users/${userId}/booths`,
-  userId,
-];
+export const userBoothsByIdKeys = (userId?: string) =>
+  userId ? [`users/${userId}/booths`, userId] : `/users/booths`;
 
-export const useUserBoothsById = (userId: string) => {
+export const useUserBoothsById = (userId?: string) => {
   const { data, error, mutate } = useSWR(
     [`users/${userId}/booths`, userId],
-    (url, userId) => getBoothsByUserId(userId)
+    (url, wartelId) =>
+      wartelId ? getBoothsByUserId(wartelId) : getUserBooths()
   );
 
   const loading = !data && !error;
