@@ -50,11 +50,11 @@ export const BoothBillPanels: React.FC = () => {
 
   return (
     <Stack
+      id="booth-bill-panels"
       direction="row"
       spacing={1.5}
       mt={3}
-      ml={kHalukaContainerPadding}
-      mr={1.5}
+      px={kHalukaContainerPadding}
       alignItems="flex-start"
       pb={3}
       sx={{

@@ -99,8 +99,19 @@ const IndicatorBox: React.FC<IndicatorBoxProps> = ({
   const handleClick = () => {
     setSelectedBooth(boothId === selectedBoothId ? "" : boothId);
     clearBatch();
-    window.location.hash =
-      boothId === selectedBoothId ? "" : `booth-${boothNumber}`;
+    if (boothId === selectedBoothId) return;
+
+    const $boothBox = document.querySelector(`#booth-${boothNumber}`);
+    const $boothBillPanels = document.querySelector(`#booth-bill-panels`);
+    // element scroll into view horizontally
+    if ($boothBox && $boothBillPanels) {
+      const horizontalOffset = $boothBox.getBoundingClientRect().left;
+
+      $boothBillPanels.scrollTo({
+        left: horizontalOffset,
+        behavior: "smooth",
+      });
+    }
   };
 
   const renderIndicator = () => {
