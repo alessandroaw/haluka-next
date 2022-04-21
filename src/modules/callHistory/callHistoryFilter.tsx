@@ -7,6 +7,7 @@ import { DateRangeState } from "src/components/dateRange";
 import { FilterMenu } from "src/components/menu";
 import { DateRangeMenu } from "src/components/menu/dateRangeMenu";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
+import { useUserBoothsById } from "src/swr-cache/useUserBoothsById";
 import { CallFilterQuery } from "src/types/query";
 import { kCallMethod, kDateFilterItems } from "src/utils/constant";
 
@@ -273,7 +274,8 @@ const BoothNumberFilter: React.FC = () => {
   const { push, query } = useRouter();
   const callQuery = query as CallFilterQuery;
   // Load user booths to get booth numbers
-  const { booths, loading, error } = useUserBooths();
+  // const { booths, loading, error } = useUserBooths();
+  const { booths, loading, error } = useUserBoothsById(callQuery.wartelId);
 
   const [selectedBoothNumbers, setSelectedBoothNumbers] = React.useState<
     number[]
