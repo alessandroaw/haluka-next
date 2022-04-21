@@ -130,10 +130,17 @@ export function escapeRegExp(value: string): string {
 // get user initials from name
 export const getInitials = (name: string) => {
   const names = name.split(" ");
-  return names
-    .map((n) => n[0])
-    .join("")
-    .toUpperCase();
+  if (names.length === 0) {
+    return "";
+  }
+
+  if (names.length === 1) {
+    return names[0][0].toUpperCase;
+  }
+
+  const firstLetters = names.map((n) => n[0]);
+
+  return [firstLetters[0], firstLetters[1]].join("").toUpperCase();
 };
 
 // String to HTML Element
