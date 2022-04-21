@@ -29,9 +29,9 @@ export const LinkTab: React.FC<LinkTabProps> = ({
   return (
     <Tab
       component="a"
-      color="black"
       sx={{
         textTransform: "initial",
+        opacity: 1,
         ...sx,
       }}
       onClick={handleClick}

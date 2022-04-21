@@ -28,7 +28,7 @@ export const LoginPage: NextPage = () => {
     if (user && !loggedOut) {
       user.role === 2
         ? router.replace("/cashier/booth-monitoring")
-        : router.replace("/admin/settings/accounts");
+        : router.replace("/admin/call-history");
     }
   }, [user, loggedOut]);
 
