@@ -276,11 +276,9 @@ const BillBox: React.FC<BillBoxProps> = ({ bill }) => {
           <Typography color="GrayText" display="block" variant="body-sm">
             {bill.status === 1 ? "Aktif" : "Belum dibayar"}
           </Typography>
-          {bill.total > 0 && (
-            <Typography display="block" variant="title-sm">
-              {numberToRupiahString(bill.total)}
-            </Typography>
-          )}
+          <Typography display="block" variant="title-sm">
+            {numberToRupiahString(bill.total)}
+          </Typography>
         </Box>
         {/* Create rounded material ui checkbox */}
         {bill.status === 2 && (

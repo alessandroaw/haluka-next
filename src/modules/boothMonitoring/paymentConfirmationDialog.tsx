@@ -60,13 +60,15 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
         sx: {
           borderRadius: "16px",
           minWidth: "560px",
+          px: 2,
+          py: 3,
         },
       }}
     >
       <DialogTitle
         sx={{
-          px: 2,
-          py: 3,
+          p: 0,
+          mb: 3,
         }}
         id="alert-dialog-title"
       >
@@ -86,7 +88,8 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
       </DialogTitle>
       <DialogContent
         sx={{
-          px: 2,
+          p: 0,
+          mb: 2,
         }}
       >
         <Stack spacing={2}>
@@ -112,8 +115,8 @@ export const PaymentConfirmationDialog: React.FunctionComponent<
       </DialogContent>
       <DialogActions
         sx={{
-          px: 2,
-          pb: "20px",
+          p: 0,
+          mb: 0.5,
         }}
       >
         <Stack width="100%" direction="row" spacing={1}>
@@ -174,7 +177,7 @@ interface CallDetailItemProps {
 
 const CallDetailItem: React.FC<CallDetailItemProps> = ({ call }) => {
   return (
-    <Stack direction="row" alignItems="center" justifyContent="space-between">
+    <Stack direction="row" alignItems="center" spacing={1}>
       <Box
         sx={{
           display: "flex",
