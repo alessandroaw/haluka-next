@@ -219,7 +219,7 @@ const PricingField: React.FC<PricingFieldProps> = ({
         <Typography variant="title-lg" gutterBottom>
           {label}
         </Typography>
-        <Typography variant="body-sm">{description}</Typography>
+        <Typography variant="body-md">{description}</Typography>
       </Stack>
       <TextField
         label={label}
