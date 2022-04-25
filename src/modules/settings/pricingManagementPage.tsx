@@ -247,7 +247,7 @@ const PricingFieldSkeleton: React.FC = () => {
         <Typography variant="title-lg">
           <Skeleton sx={{ maxWidth: "40%" }} />
         </Typography>
-        <Typography variant="body-sm">
+        <Typography variant="body-md">
           <Skeleton sx={{ maxWidth: "80%" }} />
         </Typography>
         <Skeleton
