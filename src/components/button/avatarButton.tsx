@@ -89,7 +89,7 @@ export const AccountMenu: React.FC<AccountMenuProps> = ({ handleClose }) => {
     try {
       // TODO: Implement logout
       await logout();
-      mutate();
+      mutate(user ? { ...user, role: -1 } : undefined);
     } catch (e) {
     } finally {
       handleClose();
