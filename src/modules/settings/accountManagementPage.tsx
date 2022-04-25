@@ -18,6 +18,7 @@ import { SnackBarAlert } from "src/components/snackbar";
 import { updateClient } from "src/repositories/clients";
 import { updateUser } from "src/repositories/users";
 import { useSnackBarControl } from "src/shared-hooks/useSnackbarControl";
+import { useClient } from "src/swr-cache/useClient";
 import { useUserList } from "src/swr-cache/useUserList";
 import { User } from "src/types/models";
 import { mutate } from "swr";
@@ -57,7 +58,7 @@ export const AccountManagementPage: NextPage = () => {
       <SettingsLayout>
         <SettingsBorderBox>
           <Stack spacing={3}>
-            {Array.from(Array(2).keys()).map((_, index) => (
+            {Array.from(Array(3).keys()).map((_, index) => (
               <AccountFieldSkeleton key={index} />
             ))}
           </Stack>
@@ -83,10 +84,10 @@ export const AccountManagementPage: NextPage = () => {
   return (
     <SettingsLayout>
       <Stack mb={3} direction="row" spacing={1}>
-        {users.map(({ id, name }, index) => (
+        {users.map(({ id, name, role }, index) => (
           <FilterChip
             key={id}
-            label={name}
+            label={role === 1 ? "Admin" : name}
             active={index === userIndex}
             onClick={handleFilterClick(index)}
           />
@@ -94,6 +95,7 @@ export const AccountManagementPage: NextPage = () => {
       </Stack>
       <AccountSettingForm
         userId={users[userIndex].id}
+        isAdmin={users[userIndex].role === 1}
         initialWartelName={users[userIndex].name}
         mutateByUserIndex={mutateByUserIndex}
       />
@@ -103,15 +105,18 @@ export const AccountManagementPage: NextPage = () => {
 
 interface AccountSettingFormProps {
   userId: string;
+  isAdmin?: boolean;
   initialWartelName: string;
   mutateByUserIndex: (newName: string) => void;
 }
 
 const AccountSettingForm: React.FC<AccountSettingFormProps> = ({
   userId,
+  isAdmin = false,
   initialWartelName,
   mutateByUserIndex,
 }) => {
+  const { client, error } = useClient();
   const [openField, setOpenField] = React.useState(false);
   const [open, setOpen] = React.useState(false);
   const { sbOpen, sbMessage, sbSeverity, handleSbClose, handleSbOpen } =
@@ -175,11 +180,35 @@ const AccountSettingForm: React.FC<AccountSettingFormProps> = ({
               onClose={handleSbClose}
             />
             <Stack spacing={3}>
+              {/* Render Client name in disabled form if user is admin and no data fetching error */}
+              {isAdmin ? (
+                client ? (
+                  <AccountField
+                    value={client.clientName}
+                    name=""
+                    label={"ID Klien"}
+                    description={
+                      "ID klien adalah nama unik yang digunakan untuk keperluan autentikasi admin dan KBU. ID klien tidak dapat diubah."
+                    }
+                    handleChange={handleChange}
+                    handleBlur={handleBlur}
+                    disabled
+                  />
+                ) : error ? (
+                  <GenericErrorAlert />
+                ) : (
+                  <AccountFieldSkeleton />
+                )
+              ) : null}
               <AccountField
                 value={values.name}
                 name="name"
-                label="Nama Wartel"
-                description="Nama wartel digunakan sebagai identitas dari wartel serta diperlukan untuk autentiksai wartel dan KBU"
+                label={isAdmin ? "Nama Klien" : "Nama Wartel"}
+                description={
+                  isAdmin
+                    ? "Nama klien digunakan sebagai identitas dari institusi Anda."
+                    : "Nama wartel digunakan sebagai identitas dari wartel serta diperlukan untuk autentiksai wartel dan KBU."
+                }
                 handleChange={handleChange}
                 handleBlur={handleBlur}
                 disabled={isSubmitting}
@@ -195,8 +224,12 @@ const AccountSettingForm: React.FC<AccountSettingFormProps> = ({
                   setFieldValue("confirmPassword", "");
                   setOpenField(true);
                 }}
-                label="Kata Sandi Wartel"
-                description="Kata sandi wartel digunakan untuk keperluan autentikasi wartel."
+                label={isAdmin ? "Kata Sandi Admin" : "Kata Sandi Wartel"}
+                description={
+                  isAdmin
+                    ? "Kata sandi admin digunakan untuk keperluan autentikasi admin."
+                    : "Kata sandi wartel digunakan untuk keperluan autentikasi wartel."
+                }
                 handleChange={handleChange}
                 handleBlur={handleBlur}
                 disabled={isSubmitting}
