@@ -134,11 +134,19 @@ const queryToParams = ({
           startedAt: kDateFilterItems[parsedDateRange].startedAt.toISOString(),
           endedAt: kDateFilterItems[parsedDateRange].endedAt.toISOString(),
         };
+  let parsedStatus = undefined;
+
+  // Add 1 to status if 2 exist to ensure all unpaid calls are included (1: open, 2: closed, 3: paid)
+  if (status) {
+    parsedStatus = [status].flat().includes("2")
+      ? [status, "1"].flat()
+      : [status].flat();
+  }
 
   const newCallFilterParams: CallFilterParams = {
     startedAt,
     endedAt,
-    status: status ? [status].flat() : undefined,
+    status: parsedStatus,
     method: method ? [method].flat() : undefined,
     boothNumber: boothNumber ? [boothNumber].flat() : undefined,
     userId: wartelId,
