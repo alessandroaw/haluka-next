@@ -1,30 +1,15 @@
-import {
-  Box,
-  ClickAwayListener,
-  Divider,
-  Fade,
-  Skeleton,
-  Slide,
-  Stack,
-  Theme,
-  Typography,
-} from "@mui/material";
+import { Box, Skeleton, Stack, Typography } from "@mui/material";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { useBoothBills } from "src/swr-cache/useBoothBills";
 import { useUserBooths } from "src/swr-cache/useUserBooths";
-import {
-  kBorderColor,
-  kCustomContainerLight,
-  kErrorContainerLight,
-} from "src/utils/styles";
+import { kCustomContainerLight, kErrorContainerLight } from "src/utils/styles";
 import { useBatchPayment } from "./useBatchPayment";
 // import { useBoothFocus as useBatchPayment } from "./useBoothFocus";
 
 export const BoothMonitoringHeading = () => (
   <Box>
     <BoothsIndicator />
-    <Divider sx={{ borderWidth: "1px", borderColor: kBorderColor }} />
   </Box>
 );
 

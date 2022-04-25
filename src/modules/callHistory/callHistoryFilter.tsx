@@ -23,8 +23,15 @@ export const CallHistoryFilter: React.FC = ({}) => {
   }, [query]);
 
   const handleResetClick = () => {
+    const { wartelId } = query as CallFilterQuery;
+    const newQuery: CallFilterQuery = {
+      wartelId,
+    };
+
+    if (!wartelId) delete newQuery.wartelId;
+
     push({
-      query: {},
+      query: newQuery,
     });
   };
 
@@ -107,7 +114,6 @@ const DateFilterChips: React.FC = () => {
 
   const handleDateRangeChange = (newRange: DateRangeState | undefined) => {
     if (!newRange) {
-      alert("reset");
       const newQuery: CallFilterQuery = {
         ...callQuery,
       };
@@ -212,8 +218,8 @@ const MethodFilterChips: React.FC = () => {
           <FilterChip
             key={index}
             label={label}
-            active={selectedFilterIndices.includes(`${index}`)}
-            onClick={handleFilterClick(`${index}`)}
+            active={selectedFilterIndices.includes(`${index + 1}`)}
+            onClick={handleFilterClick(`${index + 1}`)}
           />
         ))}
       </Stack>

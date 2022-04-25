@@ -53,6 +53,7 @@ export const SimpleImageDialog: React.FunctionComponent<
           borderRadius: "16px",
           minWidth: "560px",
           py: 3,
+          pt: 5,
           px: 2,
         },
       }}
@@ -61,6 +62,7 @@ export const SimpleImageDialog: React.FunctionComponent<
         sx={{
           position: "relative",
           height: "160px",
+          p: 0,
         }}
       >
         <Image
@@ -76,7 +78,8 @@ export const SimpleImageDialog: React.FunctionComponent<
       <DialogTitle
         id="alert-dialog-title"
         sx={{
-          my: 3,
+          my: 5,
+          p: 0,
         }}
       >
         <Stack>
@@ -89,7 +92,11 @@ export const SimpleImageDialog: React.FunctionComponent<
         </Stack>
       </DialogTitle>
 
-      <DialogActions>
+      <DialogActions
+        sx={{
+          p: 0,
+        }}
+      >
         <Stack width="100%" direction="row" spacing={1}>
           <RoundedButton
             fullWidth
