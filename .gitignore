@@ -36,3 +36,8 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# ignore all playground files
+src/playground
+src/pages/playground
+src/modules/playground
