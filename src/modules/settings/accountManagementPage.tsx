@@ -1,21 +1,11 @@
-import {
-  Alert,
-  Box,
-  Skeleton,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { Formik, useFormikContext } from "formik";
+import { Skeleton, Stack, TextField, Typography } from "@mui/material";
+import { Formik } from "formik";
 import { NextPage } from "next";
-import Image from "next/image";
-import underConstructionImg from "public/images/png/under-construction.png";
 import React from "react";
 import { GenericErrorAlert } from "src/components/alert";
 import { RoundedButton } from "src/components/button";
 import { FilterChip } from "src/components/chip";
 import { SnackBarAlert } from "src/components/snackbar";
-import { updateClient } from "src/repositories/clients";
 import { updateUser } from "src/repositories/users";
 import { useSnackBarControl } from "src/shared-hooks/useSnackbarControl";
 import { useClient } from "src/swr-cache/useClient";

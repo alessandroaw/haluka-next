@@ -20,19 +20,19 @@ function MyApp({ Component, pageProps }: AppProps) {
   const { user, loggedOut, loading } = useUser();
   const router = useRouter();
 
-  if (pageProps.protected) {
-    if (loading) {
-      return (
-        <Container sx={{ height: "100vh" }}>
-          <Stack justifyContent="center" alignItems="center" height="100%">
-            <CircularProgress />
-          </Stack>
-        </Container>
-      );
-    } else if (loggedOut || (pageProps.role && pageProps.role !== user?.role)) {
-      router.replace("/");
-    }
-  }
+  // if (pageProps.protected) {
+  //   if (loading) {
+  //     return (
+  //       <Container sx={{ height: "100vh" }}>
+  //         <Stack justifyContent="center" alignItems="center" height="100%">
+  //           <CircularProgress />
+  //         </Stack>
+  //       </Container>
+  //     );
+  //   } else if (loggedOut || (pageProps.role && pageProps.role !== user?.role)) {
+  //     router.replace("/");
+  //   }
+  // }
 
   return (
     <CacheProvider value={clientSideEmotionCache}>
